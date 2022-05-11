@@ -10,66 +10,53 @@
 #                                                                              #
 # **************************************************************************** #
 
-LIBFT		=	libft/libft.a
-LIB_PATH 	=	./libft
+NAME = cub3d
 
-LMLX		=	~/minilibx/libmlx_Linux.a
-MLX_PATH	=	~/minilibx
+SRCS_FILES	=	main.c 					\
+				# ft_itoa.c				\
+				# ft_init.c				\
+				# ft_utils.c				\
+				# ft_switch.c				\
+				# ft_square.c				\
+				# ft_checkmap.c			\
+				# ft_alloc_map.c			\
+				# ft_checkchar.c			\
+				# ft_enemy_move.c			\
+				# get_next_line.c			\
+				# ft_checkrectangle.c		\
+				# get_next_line_utils.c	\
 
-SRCS		=	ft_argchecker.c \
-				ft_mlx.c \
-				ft_draw_line.c \
-				ft_end.c \
-				ft_fdf.c \
-				ft_hooks.c \
-				ft_parsing.c \
-				ft_print.c \
-				ft_projection.c \
-				ft_utils.c
+FLAGS = -Wall -Werror -Wextra
 
-OBJS		= 	${SRCS:.c=.o}
+INCLUDES = header -I minilibx_1
 
-.c.o:
-	@echo "Creating object file for $<..."
-	@${CC} ${CFLAGS} -c $< -o ${<:.c=.o} -I ${LIB_PATH} -I ${MLX_PATH}
+PATH = srcs
 
-NAME		= fdf
+OBJ_DIR = obj
 
-CC			= cc
-RM			= rm -f
+OBJ = $(addprefix $(OBJ_DIR)/,$(SRCS_FILES:.c=.o))
 
-CFLAGS		=  -Wall -Wextra -Werror -g
-CLIBS		= -lXext -lX11 -lm
+all: $(NAME)
 
-all:	${NAME}
+$(OBJ_DIR)/%.o: $(PATH)/%.c
+	@$(shell mkdir -p $(OBJ_DIR))
+	@printf "Compiling $< ...\n"
+	@$(shell gcc $(FLAGS) -I $(INCLUDES) -c $< -o $@)
 
-${LIBFT}:	
-	@echo "Compiling Libft..."
-	@make -C ${LIB_PATH} -s
-
-${NAME}:	${LIBFT} ${OBJS}
-	@echo "Compiling Object files..."
-	@${CC} ${CFLAGS} ${OBJS} ${LIBFT} ${LMLX} -o ${NAME} -I ${LIB_PATH} -I ${MLX_PATH} ${CLIBS}
+$(NAME): $(OBJ)
+	@$(shell gcc $(OBJ) -Lminilibx_1 -lXext -lX11 -o $(NAME))
+	@printf "Executable $@ created !\n"
 
 clean:
-	@echo "Removing object files in current directory..."
-	@${RM} ${OBJS}
+	@printf "Deleting objects\n"
+	@$(shell rm -rf $(OBJ_DIR))
 
-clean-all: clean
-	@echo "Removing object files in ${LIB_PATH}..."
-	@make clean -C ${LIB_PATH} -s
+fclean: clean
+	@printf "Deleting executable\n"
+	@$(shell rm -rf $(NAME))
 
-fclean:		clean
-	@echo "Removing executable ${NAME}..."
-	@${RM} ${NAME}
+bonus: $(NAME)
 
-fclean-all: fclean
-	@echo "Removing object files in ${LIB_PATH}..."
-	@make fclean -C ${LIB_PATH} -s
+re: fclean all
 
-re:			fclean all
-
-re-all:		fclean
-	@echo "Recompiling Libft..."
-	@make re -C ${LIB_PATH} -s
-	@make all -s
+.PHONY:		all clean fclean re
