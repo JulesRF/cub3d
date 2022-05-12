@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jroux-fo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 15:28:03 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/12 15:28:04 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/05/12 17:40:07 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "cub3d.h"
 
 int	ft_strlen(char *str)
 {

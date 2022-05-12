@@ -3,14 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jroux-fo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/11 14:04:54 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/05/12 19:08:28 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+int	ft_specialstrlen(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+		i++;
+	if (str[i - 1] == '\n')
+		i--;
+	return (i);
+}
+
+int	ft_ischar(char *str, char c)
+{
+	int	i;
+	int	count;
+
+	if (!str)
+		return (0);
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			count++;
+		i++;
+	}
+	return (count);
+}
 
 void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
@@ -20,18 +52,14 @@ void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void	ft_draw_map(t_data **data)
-{
-
-}
-
-char	*ft_largest(char **map)
+int ft_largest(char **map)
 {
 	int	i;
 	int	j;
 	int	max;
 
 	i = 0;
+	max = -4;
 	while (map[i] != 0)
 	{
 		j = 0;
@@ -46,7 +74,7 @@ char	*ft_largest(char **map)
 	return (max);
 }
 
-char *ft_longuest(char **map)
+int ft_longuest(char **map)
 {
 	int	i;
 
@@ -69,16 +97,19 @@ char	**ft_init(int line)
 
 int	ft_file_line(int fd)
 {
-	int		map_lenght;
 	int		line;
 	char	*dest;
 
-	map_lenght = -1;
 	line = 0;
 	while (dest != NULL || line == 0)
 	{
 		dest = get_next_line(fd);
+		if (dest == NULL)
+			break ;
+		free (dest);
+		line++;
 	}
+	return (line);
 }
 
 char	**ft_alloc_map(char *map_path)
@@ -92,31 +123,110 @@ char	**ft_alloc_map(char *map_path)
 	fd = open(map_path, O_RDONLY);
 	line = ft_file_line(fd);
 	dest = ft_init(line);
+	if (!dest)
+		return (NULL);
+	close (fd);
+	fd = open(map_path, O_RDONLY);
+	i = 0;
+	while (i < line)
+	{
+		temp = get_next_line(fd);
+		if (ft_ischar(temp, '\n'))
+			temp[ft_specialstrlen(temp)] = '\0';
+		dest[i] = ft_strdup(temp);
+		free (temp);
+		i++;
+	}
+	dest[i] = 0;
+	return (close (fd), dest);
 }
 
-void	ft_init_mstruct(t_data *data, char *arg);
+void	ft_init_mlxwinimg(t_data *data)
+{
+	data->mlx_ptr = mlx_init();
+	data->mlx_win = mlx_new_window(data->mlx_ptr, data->line_size * 25,
+			data->column_size * 25, "cub3d");
+	data->img = mlx_new_image(data->mlx_ptr, data->line_size * 25,
+			data->column_size * 25);
+	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
+			&data->line_length, &data->endian);
+}
+
+void	ft_init_mstruct(t_data *data, char *arg)
 {
     data->map = ft_alloc_map(arg);
     data->line_size = ft_largest(data->map);
 	data->column_size = ft_longuest(data->map);
 }
 
+void	ft_draw_square(t_data *data, int x, int y, int color)
+{
+	double	i;
+	double	j;
+
+	i = 0;
+	while (x + i < x + 25)
+	{
+		j = 0;
+		while (y + j < y + 25)
+		{
+			ft_mlx_pixel_put(data, x + i, y + j, color);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	ft_draw_map(t_data *data, char **map, int x, int y)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while (i < x)
+	{
+		j = 0;
+		while (j < y)
+		{
+			if (map[j / 25][i / 25] == '1')
+				ft_draw_square(data, i, j, 0xFF000000);
+			if (map[j / 25][i / 25] == '0')
+				ft_draw_square(data, i, j, 0x00FF0000);
+			if (map[j / 25][i / 25] == ' ')
+				ft_draw_square(data, i, j, 0x00000000);
+			j += 25;
+		}
+		i += 25;
+	}
+}
+
 int main(int argc, char **argv)
 {
     t_data     *img;
-
+	int	i;
+	
+	i = 0;
+	
     if (argc != 2)
 		return (printf("Error\nInvalid arguments number\n"), 1);
-    img = malloc(sizeof(t_data));
+    
+	img = malloc(sizeof(t_data));
+	
     ft_init_mstruct(img, argv[1]);
+	
+	printf ("line_size = %d\n", img->line_size);
+	printf ("column_size = %d\n", img->column_size);
+	ft_init_mlxwinimg(img);
 
-    ft_draw_map()
-    // while (i < 100)
-    // {
-    //     while (j < 100)
-    //     {
-    //         j++;
-    //     }
-    //     i++;
-    // }
+	while (img->map[i] != 0)
+	{
+		printf("%s\n", img->map[i]);
+		i++;
+	}
+
+	ft_draw_map(img, img->map, img->line_size * 25, img->column_size * 25);
+
+	mlx_put_image_to_window(img->mlx_ptr, img->mlx_win, img->img, 0, 0);
+	mlx_loop(img->mlx_ptr);
 }
