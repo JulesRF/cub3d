@@ -1,33 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jroux-fo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/11 14:06:57 by jroux-fo         ###   ########.fr       */
+/*   Created: 2022/05/12 15:27:01 by jroux-fo          #+#    #+#             */
+/*   Updated: 2022/05/12 15:27:03 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
-# include <stdio.h>
-# include "mlx.h"
+char	*get_next_line(int fd)
+{
+	char		buffer[16 + 1];
+	char		*line;
+	static char	*save = NULL;
+	int			ret;
 
-typedef struct s_data {
-	void		*mlx_ptr;
-	void		*mlx_win;
-	void		*img;
-	char		*addr;
-	char		**map;
-	int			bits_per_pixel;
-	int			line_length;
-	int			endian;
-	int			line_size;
-	int			column_size;
-	int			player_x;
-	int			player_y;
-}				t_data;
-
-#endif
+	ret = 1;
+	if (fd < 0 || 16 <= 0)
+		return (NULL);
+	while (!ft_is_next_line(save, '\n') && ret > 0)
+	{
+		ret = read(fd, buffer, 16);
+		if (ret <= 0)
+			break ;
+		buffer[ret] = '\0';
+		save = ft_strjoin(save, buffer);
+	}
+	line = ft_strdup(save);
+	save = ft_sep_after(save);
+	return (line);
+}
