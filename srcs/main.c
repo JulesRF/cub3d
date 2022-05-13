@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/13 14:35:55 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/05/13 16:49:55 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ void	ft_draw_map(t_data *data, char **map, int x, int y)
 			if (map[j / TILE_SIZE][i / TILE_SIZE] == '0')
 				ft_draw_square(data, i, j, 0xC0C0C0);
 			if (map[j / TILE_SIZE][i / TILE_SIZE] == ' ')
-				ft_draw_square(data, i, j, 0x00000000);
+				ft_draw_square(data, i, j, 0x0000FF00);
 			j += TILE_SIZE;
 		}
 		i += TILE_SIZE;
