@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/12 19:08:28 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/05/13 14:35:55 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,10 +144,10 @@ char	**ft_alloc_map(char *map_path)
 void	ft_init_mlxwinimg(t_data *data)
 {
 	data->mlx_ptr = mlx_init();
-	data->mlx_win = mlx_new_window(data->mlx_ptr, data->line_size * 25,
-			data->column_size * 25, "cub3d");
-	data->img = mlx_new_image(data->mlx_ptr, data->line_size * 25,
-			data->column_size * 25);
+	data->mlx_win = mlx_new_window(data->mlx_ptr, data->line_size * TILE_SIZE,
+			data->column_size * TILE_SIZE, "cub3d");
+	data->img = mlx_new_image(data->mlx_ptr, data->line_size * TILE_SIZE,
+			data->column_size * TILE_SIZE);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
 }
@@ -165,12 +165,32 @@ void	ft_draw_square(t_data *data, int x, int y, int color)
 	double	j;
 
 	i = 0;
-	while (x + i < x + 25)
+	while (x + i < x + (TILE_SIZE - 1))
 	{
 		j = 0;
-		while (y + j < y + 25)
+		while (y + j < y + (TILE_SIZE - 1))
 		{
 			ft_mlx_pixel_put(data, x + i, y + j, color);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	ft_draw_player(t_data *data, int x, int y)
+{
+	double	i;
+	double	j;
+
+	i = 0;
+	if (data->map[x / TILE_SIZE][y / TILE_SIZE] == '1')
+		return ;
+	while (x + i < x + (TILE_SIZE / 2))
+	{
+		j = 0;
+		while (y + j < y + (TILE_SIZE / 2))
+		{
+			ft_mlx_pixel_put(data, x + i, y + j, 0x00FF0000);
 			j++;
 		}
 		i++;
@@ -189,16 +209,52 @@ void	ft_draw_map(t_data *data, char **map, int x, int y)
 		j = 0;
 		while (j < y)
 		{
-			if (map[j / 25][i / 25] == '1')
-				ft_draw_square(data, i, j, 0xFF000000);
-			if (map[j / 25][i / 25] == '0')
-				ft_draw_square(data, i, j, 0x00FF0000);
-			if (map[j / 25][i / 25] == ' ')
+			if (map[j / TILE_SIZE][i / TILE_SIZE] == '1')
+				ft_draw_square(data, i, j, 0x606060);
+			if (map[j / TILE_SIZE][i / TILE_SIZE] == '0')
+				ft_draw_square(data, i, j, 0xC0C0C0);
+			if (map[j / TILE_SIZE][i / TILE_SIZE] == ' ')
 				ft_draw_square(data, i, j, 0x00000000);
-			j += 25;
+			j += TILE_SIZE;
 		}
-		i += 25;
+		i += TILE_SIZE;
 	}
+	ft_draw_player(data, data->player_x, data->player_y);
+	mlx_put_image_to_window(data->mlx_ptr, data->mlx_win, data->img, 0, 0);
+}
+
+int	ft_key_hooks(int keycode, t_data *img)
+{
+	if (keycode == 65307)
+	{
+		exit(EXIT_SUCCESS);
+		return (0);
+	}
+	if (keycode == 'w')
+	{
+		img->player_y -= 10;
+		ft_draw_map(img, img->map, img->line_size * TILE_SIZE,
+				img->column_size * TILE_SIZE);
+	}
+	if (keycode == 'a')
+	{
+		img->player_x -= 10;
+		ft_draw_map(img, img->map, img->line_size * TILE_SIZE,
+				img->column_size * TILE_SIZE);
+	}
+	if (keycode == 's')
+	{
+		img->player_y += 10;
+		ft_draw_map(img, img->map, img->line_size * TILE_SIZE,
+				img->column_size * TILE_SIZE);
+	}
+	if (keycode == 'd')
+	{
+		img->player_x += 10;
+		ft_draw_map(img, img->map, img->line_size * TILE_SIZE,
+				img->column_size * TILE_SIZE);
+	}
+	return (1);
 }
 
 int main(int argc, char **argv)
@@ -213,6 +269,8 @@ int main(int argc, char **argv)
     
 	img = malloc(sizeof(t_data));
 	
+	img->player_x = 100;
+	img->player_y = 100;
     ft_init_mstruct(img, argv[1]);
 	
 	printf ("line_size = %d\n", img->line_size);
@@ -225,8 +283,8 @@ int main(int argc, char **argv)
 		i++;
 	}
 
-	ft_draw_map(img, img->map, img->line_size * 25, img->column_size * 25);
+	ft_draw_map(img, img->map, img->line_size * TILE_SIZE, img->column_size * TILE_SIZE);
 
-	mlx_put_image_to_window(img->mlx_ptr, img->mlx_win, img->img, 0, 0);
+	mlx_hook(img->mlx_win, 2, 1L << 0, ft_key_hooks, img);
 	mlx_loop(img->mlx_ptr);
 }
