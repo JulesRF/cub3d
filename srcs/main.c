@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/13 16:49:55 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/05/13 17:45:50 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,12 +165,14 @@ void	ft_draw_square(t_data *data, int x, int y, int color)
 	double	j;
 
 	i = 0;
-	while (x + i < x + (TILE_SIZE - 1))
+	while (x + i < x + (TILE_SIZE))
 	{
 		j = 0;
-		while (y + j < y + (TILE_SIZE - 1))
+		while (y + j < y + (TILE_SIZE))
 		{
 			ft_mlx_pixel_put(data, x + i, y + j, color);
+			if (i >= TILE_SIZE - OUTLINE || j >= TILE_SIZE - OUTLINE)
+				ft_mlx_pixel_put(data, x + i, y + j, 0x000000);
 			j++;
 		}
 		i++;
@@ -183,12 +185,10 @@ void	ft_draw_player(t_data *data, int x, int y)
 	double	j;
 
 	i = 0;
-	if (data->map[x / TILE_SIZE][y / TILE_SIZE] == '1')
-		return ;
-	while (x + i < x + (TILE_SIZE / 2))
+	while (x + i < x + (PLAYER_SIZE))
 	{
 		j = 0;
-		while (y + j < y + (TILE_SIZE / 2))
+		while (y + j < y + (PLAYER_SIZE))
 		{
 			ft_mlx_pixel_put(data, x + i, y + j, 0x00FF0000);
 			j++;
@@ -232,25 +232,25 @@ int	ft_key_hooks(int keycode, t_data *img)
 	}
 	if (keycode == 'w')
 	{
-		img->player_y -= 10;
+		img->player_y -= 5;
 		ft_draw_map(img, img->map, img->line_size * TILE_SIZE,
 				img->column_size * TILE_SIZE);
 	}
 	if (keycode == 'a')
 	{
-		img->player_x -= 10;
+		img->player_x -= 5;
 		ft_draw_map(img, img->map, img->line_size * TILE_SIZE,
 				img->column_size * TILE_SIZE);
 	}
 	if (keycode == 's')
 	{
-		img->player_y += 10;
+		img->player_y += 5;
 		ft_draw_map(img, img->map, img->line_size * TILE_SIZE,
 				img->column_size * TILE_SIZE);
 	}
 	if (keycode == 'd')
 	{
-		img->player_x += 10;
+		img->player_x += 5;
 		ft_draw_map(img, img->map, img->line_size * TILE_SIZE,
 				img->column_size * TILE_SIZE);
 	}

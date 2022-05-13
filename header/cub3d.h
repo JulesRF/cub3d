@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/13 14:13:41 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/05/13 17:44:43 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 # include <stdlib.h>
 # include <fcntl.h>
 
-# define TILE_SIZE	25
+# define TILE_SIZE		25
+# define PLAYER_SIZE	10
+# define OUTLINE		1	
 
 typedef struct s_data {
 	void		*mlx_ptr;
