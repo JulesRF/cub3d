@@ -6,7 +6,7 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/05/12 18:41:28 by jroux-fo         ###   ########.fr        #
+#    Updated: 2022/05/14 14:49:10 by ascotto-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ SRCS_FILES	=	main.c 					\
 				# ft_enemy_move.c			\
 				# ft_checkrectangle.c		\
 
-FLAGS = -Wall -Werror -Wextra -Imlx_linux
+FLAGS = -Wall -Werror -Wextra -g
 
 MLXFLAGS = -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
 

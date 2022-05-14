@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/13 17:45:50 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/05/14 15:28:00 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,68 @@ void	ft_init_mstruct(t_data *data, char *arg)
 	data->column_size = ft_longuest(data->map);
 }
 
+typedef struct s_point2d
+{
+	float	x;
+	float	y;
+	int		size;
+}	t_point2d;
+
+typedef struct s_line
+{
+	int	dx;
+	int	dy;
+	int	sx;
+	int	sy;
+	int	err;
+	int	color;
+}	t_line;
+
+void	ft_draw2(t_point2d A, t_point2d B, void *img, t_line line)
+{
+	int	e2;
+
+	while (1)
+	{
+		ft_mlx_pixel_put(img, A.x, A.y, line.color);
+		if (A.x == B.x && A.y == B.y)
+			break ;
+		e2 = line.err;
+		if (e2 > -(line.dx))
+		{
+			line.err -= line.dy;
+			A.x = A.x + line.sx;
+		}
+		if (e2 < line.dy)
+		{
+			line.err += line.dx;
+			A.y = A.y + line.sy;
+		}
+	}
+}
+
+void	ft_drawline(t_point2d A, t_point2d B, void *img, int color)
+{
+	t_line	line;
+
+	line.dx = (int)floorf(fabsf(B.x - A.x));
+	line.dy = (int)floorf(fabsf(B.y - A.y));
+	if (A.x < B.x)
+		line.sx = 1;
+	else
+		line.sx = -1;
+	if (A.y < B.y)
+		line.sy = 1;
+	else
+		line.sy = -1;
+	if (line.dx > line.dy)
+		line.err = line.dx / 2;
+	else
+		line.err = -(line.dy) / 2;
+	line.color = color;
+	ft_draw2(A, B, img, line);
+}
+
 void	ft_draw_square(t_data *data, int x, int y, int color)
 {
 	double	i;
@@ -181,10 +243,12 @@ void	ft_draw_square(t_data *data, int x, int y, int color)
 
 void	ft_draw_player(t_data *data, int x, int y)
 {
-	double	i;
-	double	j;
+//	double		i;
+//	double		j;
+	t_point2d	A;
+	t_point2d	B;
 
-	i = 0;
+/*	i = 0;
 	while (x + i < x + (PLAYER_SIZE))
 	{
 		j = 0;
@@ -194,7 +258,13 @@ void	ft_draw_player(t_data *data, int x, int y)
 			j++;
 		}
 		i++;
-	}
+	}*/
+	ft_mlx_pixel_put(data, x, y, 0x00FF0000);
+	A.x = data->player_x;
+	A.y = data->player_y;
+	B.x = data->player_x + data->player_dx * 5;
+	B.y = data->player_y + data->player_dy * 5;
+	ft_drawline(A, B, data, 0x00FF0000);
 }
 
 void	ft_draw_map(t_data *data, char **map, int x, int y)
@@ -232,25 +302,35 @@ int	ft_key_hooks(int keycode, t_data *img)
 	}
 	if (keycode == 'w')
 	{
-		img->player_y -= 5;
+		img->player_x += img->player_dx;
+		img->player_y += img->player_dy;
 		ft_draw_map(img, img->map, img->line_size * TILE_SIZE,
 				img->column_size * TILE_SIZE);
 	}
 	if (keycode == 'a')
 	{
-		img->player_x -= 5;
+		img->player_angle -= 0.1;
+		if (img->player_angle < 0)
+			img->player_angle += (2 * M_PI);
+		img->player_dx = cosf(img->player_angle ) * 5;
+		img->player_dy = sinf(img->player_angle) * 5;
 		ft_draw_map(img, img->map, img->line_size * TILE_SIZE,
 				img->column_size * TILE_SIZE);
 	}
 	if (keycode == 's')
 	{
-		img->player_y += 5;
+		img->player_x -= img->player_dx;
+		img->player_y -= img->player_dy;
 		ft_draw_map(img, img->map, img->line_size * TILE_SIZE,
 				img->column_size * TILE_SIZE);
 	}
 	if (keycode == 'd')
 	{
-		img->player_x += 5;
+		img->player_angle += 0.1;
+		if (img->player_angle > (2 * M_PI))
+			img->player_angle -= (2 * M_PI);
+		img->player_dx = cosf(img->player_angle ) * 5;
+		img->player_dy = sinf(img->player_angle) * 5;
 		ft_draw_map(img, img->map, img->line_size * TILE_SIZE,
 				img->column_size * TILE_SIZE);
 	}
@@ -271,6 +351,9 @@ int main(int argc, char **argv)
 	
 	img->player_x = 100;
 	img->player_y = 100;
+	img->player_angle = M_PI;
+	img->player_dx = cos(img->player_angle ) * 5;
+	img->player_dy = sin(img->player_angle) * 5;
     ft_init_mstruct(img, argv[1]);
 	
 	printf ("line_size = %d\n", img->line_size);

@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/13 17:44:43 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/05/14 14:56:51 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <math.h>
 
 # define TILE_SIZE		25
 # define PLAYER_SIZE	10
@@ -33,8 +34,11 @@ typedef struct s_data {
 	int			endian;
 	int			line_size;
 	int			column_size;
-	int			player_x;
-	int			player_y;
+	float		player_x;
+	float		player_y;
+	float		player_dx;
+	float		player_dy;
+	float		player_angle;
 }				t_data;
 
 //	get_next_line.c
