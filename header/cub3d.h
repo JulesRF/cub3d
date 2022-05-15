@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/14 14:56:51 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/05/15 18:26:17 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,34 +23,50 @@
 # define PLAYER_SIZE	10
 # define OUTLINE		1	
 
-typedef struct s_data {
-	void		*mlx_ptr;
-	void		*mlx_win;
-	void		*img;
-	char		*addr;
+# define WIDTH	1920
+# define HEIGHT	1080
+
+typedef struct s_point2d
+{
+	float	x;
+	float	y;
+}	t_point2d;
+
+typedef struct s_line
+{
+	int	dx;
+	int	dy;
+	int	sx;
+	int	sy;
+	int	err;
+	int	color;
+}	t_line;
+
+typedef struct s_image
+{
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}	t_image;
+
+typedef struct s_player
+{
+	float	x;
+	float	y;
+	float	dx;
+	float	dy;
+	float	angle;
+}	t_player;
+
+typedef struct s_mlx
+{
+	void		*mlx;
+	void		*win;
+	t_image		*img;
+	t_player	*player;
 	char		**map;
-	int			bits_per_pixel;
-	int			line_length;
-	int			endian;
-	int			line_size;
-	int			column_size;
-	float		player_x;
-	float		player_y;
-	float		player_dx;
-	float		player_dy;
-	float		player_angle;
-}				t_data;
-
-//	get_next_line.c
-char	*get_next_line(int fd);
-
-//	get_next_line_utils.c
-int		ft_strlen(char *str);
-int		ft_is_next_line(char *str, char nl);
-char	*ft_strdup(char *s1);
-char	*ft_strjoin(char *s1, char *s2);
-char	*ft_sep_after(char *src);
-
-void	ft_init_mlxwinimg(t_data *data);
+}	t_mlx;
 
 #endif

@@ -6,15 +6,13 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/05/14 14:49:10 by ascotto-         ###   ########.fr        #
+#    Updated: 2022/05/15 18:28:43 by ascotto-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3d
 
 SRCS_FILES	=	main.c 					\
-				get_next_line.c			\
-				get_next_line_utils.c	\
 				# ft_itoa.c				\
 				# ft_init.c				\
 				# ft_utils.c				\
