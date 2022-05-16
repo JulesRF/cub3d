@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/15 18:26:17 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/05/16 12:29:58 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 
 # define WIDTH	1920
 # define HEIGHT	1080
+
+# define PI		3.141592653589793
 
 typedef struct s_point2d
 {
