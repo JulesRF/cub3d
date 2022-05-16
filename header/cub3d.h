@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/16 12:29:58 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/05/16 15:18:25 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 # define PLAYER_SIZE	10
 # define OUTLINE		1	
 
-# define WIDTH	1920
-# define HEIGHT	1080
+# define WIDTH	1280
+# define HEIGHT	1024
 
 # define PI		3.141592653589793
 
