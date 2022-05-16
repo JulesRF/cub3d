@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/12 19:08:28 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/05/16 17:56:53 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,7 @@ void	ft_draw_map(t_data *data, char **map, int x, int y)
 		while (j < y)
 		{
 			if (map[j / 25][i / 25] == '1')
-				ft_draw_square(data, i, j, 0xFF000000);
+				ft_draw_square(data, i, j, 0x0000FF00);
 			if (map[j / 25][i / 25] == '0')
 				ft_draw_square(data, i, j, 0x00FF0000);
 			if (map[j / 25][i / 25] == ' ')
@@ -199,6 +199,160 @@ void	ft_draw_map(t_data *data, char **map, int x, int y)
 		}
 		i += 25;
 	}
+}
+
+int	ft_test(char *str, char *set, int count, int i)
+{
+	if (count != 1)
+		return (1);
+	if ((str[i - 1] != set[3] || str[i - 2] != set[2] || str[i - 3] != set[1]
+			|| str[i - 4] != set [0]))
+		return (1);
+	return (0);
+}
+
+int	ft_checkname(char *str, char *set)
+{
+	int		i;
+	int		j;
+	int		count;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		j = 0;
+		if (str[i] == set[j])
+		{
+			while (str[i] == set[j] && j < 4)
+			{
+				i++;
+				j++;
+			}
+			if (j == 4)
+				count++;
+			i = i - j;
+		}
+		i++;
+	}
+	if (ft_test(str, set, count, i))
+		return (write(1, "Error\nInvalid map file name\n", 28), 1);
+	return (0);
+}
+
+// int	ft_checkchar2(char *dest, int fd)
+// {
+// 	int	count[3];
+// 	int	i;
+
+// 	ft_memset(count, 0, 3);
+// 	i = 1;
+// 	while (dest != NULL || i == 1)
+// 	{
+// 		dest = get_next_line(fd);
+// 		if (dest == NULL && i > 1)
+// 			break ;
+// 		count[0] = count[0] + ft_ischar(dest, 'C');
+// 		count[1] = count[1] + ft_ischar(dest, 'P');
+// 		count[2] = count[2] + ft_ischar(dest, 'E');
+// 		free (dest);
+// 		i++;
+// 	}
+// 	if (count[0] == 0 || count[1] != 1 || count[2] != 1)
+// 		return (write(1, "Error\nInvalid map form. 4\n", 26), 1);
+// 	return (0);
+// }
+
+int	ft_check_closed_line(char **map, int i, int j, int boolean)
+{
+	while (map[i] != 0)
+	{
+		j = 0;
+		while (map[i][j] != '\0')
+		{
+			if (map[i][j] == '1')
+			{
+				while (map[i][j] == '1' && map[i][j])
+					j++;
+				boolean = 0;
+			}
+			if (map[i][j] == '0')
+			{
+				while (map[i][j] == '0' && map[i][j])
+					j++;
+				boolean = 1;
+			}
+			else
+				j++;
+		}
+		if (boolean == 1)
+			return (write(1, "Error\nInvalid map format\n", 25), 1);
+		i++;
+	}
+	return (0);
+}
+
+int	ft_check_closed_column(char **map, int i, int j, int boolean)
+{
+	while (map[i] != 0)
+	{
+		j = 0;
+		while (map[i][j] != '\0')
+		{
+			if (map[i][j] == '1')
+			{
+				while (map[i][j] == '1' && map[i][j])
+					j++;
+				boolean = 0;
+			}
+			if (map[i][j] == '0')
+			{
+				while (map[i][j] == '0' && map[i][j])
+					j++;
+				boolean = 1;
+			}
+			else
+				j++;
+		}
+		if (boolean == 1)
+			return (write(1, "Error\nInvalid map format\n", 25), 1);
+		i++;
+	}
+	return (0);
+}
+
+int	ft_check_closed(char *map_path, int i, int j)
+{
+	char	**map;
+
+	map = ft_alloc_map(map_path);
+	if (ft_check_closed_line(map, i, j, 0))
+		return (1);
+	if (ft_check_closed_column(map, i, j, 0));
+		return (1);
+	return (0);
+}
+
+int	ft_checkmap(char *map_path)
+{
+	// int		line;
+	int		fd;
+	// char	*dest;
+
+	// dest = NULL;
+	if (ft_checkname(map_path, ".cub"))
+		return (1);
+	// fd = open(map_path, O_RDONLY);
+	// if (fd == -1)
+	// 	return (write(1, "Error\nfailed to open map\n", 25), 1);
+	fd = open(map_path, O_RDONLY);
+	if (fd == -1)
+		return (write(1, "Error\nfailed to open map\n", 25), 1);
+	// if (ft_checkchar(map_path, dest, line, fd))
+		// return (1);
+	if (ft_check_closed(map_path, 0, 0))
+		return (1);
+	return (0);
 }
 
 int main(int argc, char **argv)
@@ -213,6 +367,9 @@ int main(int argc, char **argv)
     
 	img = malloc(sizeof(t_data));
 	
+	if (ft_checkmap(argv[1]))
+		printf("MAUVAISE MAP\n");
+
     ft_init_mstruct(img, argv[1]);
 	
 	printf ("line_size = %d\n", img->line_size);

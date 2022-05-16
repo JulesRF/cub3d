@@ -6,7 +6,7 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/05/12 18:41:28 by jroux-fo         ###   ########.fr        #
+#    Updated: 2022/05/16 14:51:01 by jroux-fo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ SRCS_FILES	=	main.c 					\
 
 FLAGS = -Wall -Werror -Wextra -Imlx_linux
 
-MLXFLAGS = -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
+MLXFLAGS = -Lmlx_linux -lmlx_Linux -L/usr/lib -I mlx_linux -lXext -lX11 -lm -lz
 
 INCLUDES = header
 
