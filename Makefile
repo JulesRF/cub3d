@@ -26,7 +26,7 @@ SRCS_FILES	=	main.c 					\
 				# ft_enemy_move.c			\
 				# ft_checkrectangle.c		\
 
-FLAGS = -Wall -Werror -Wextra -Imlx_linux
+FLAGS = -Wall -Werror -Wextra -Imlx_linux -g
 
 MLXFLAGS = -Lmlx_linux -lmlx_Linux -L/usr/lib -I mlx_linux -lXext -lX11 -lm -lz
 

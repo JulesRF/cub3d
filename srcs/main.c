@@ -294,29 +294,38 @@ int	ft_check_closed_line(char **map, int i, int j, int boolean)
 
 int	ft_check_closed_column(char **map, int i, int j, int boolean)
 {
-	while (map[i] != 0)
+	int	zero;
+
+	while (map[0][j] != '\0')
 	{
-		j = 0;
-		while (map[i][j] != '\0')
+		zero = 0;
+		i = 0;
+		while (map[i] != 0)
 		{
-			if (map[i][j] == '1')
+			if (map[i] != 0 && map[i][j] == '1')
 			{
-				while (map[i][j] == '1' && map[i][j])
-					j++;
-				boolean = 0;
+				boolean = !boolean;
+				while (map[i] != 0 && map[i][j] == '1')
+				{
+					i++;
+					printf("la y'a un 1\n");
+				}
 			}
-			if (map[i][j] == '0')
+			if (map[i] != 0 && map[i][j] == '0')
 			{
-				while (map[i][j] == '0' && map[i][j])
-					j++;
-				boolean = 1;
+				while (map[i] != 0 && map[i][j] == '0')
+				{
+					i++;
+					zero++;
+				}
 			}
-			else
-				j++;
+			else if (map[i])
+				i++;
 		}
-		if (boolean == 1)
+		printf("line number: %d, boolean = %d\n", j, boolean);
+		if (!boolean && zero != 0)
 			return (write(1, "Error\nInvalid map format\n", 25), 1);
-		i++;
+		j++;
 	}
 	return (0);
 }
@@ -326,9 +335,9 @@ int	ft_check_closed(char *map_path, int i, int j)
 	char	**map;
 
 	map = ft_alloc_map(map_path);
-	if (ft_check_closed_line(map, i, j, 0))
-		return (1);
-	if (ft_check_closed_column(map, i, j, 0));
+	// if (ft_check_closed_line(map, i, j, 0))
+	// 	return (1);
+	if (ft_check_closed_column(map, i, j, 0))
 		return (1);
 	return (0);
 }
