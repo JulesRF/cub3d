@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/18 14:11:29 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/05/18 16:48:05 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,13 @@
 
 # define TILE_SIZE		25
 # define PLAYER_SIZE	10
-# define OUTLINE		1	
+# define OUTLINE		0	
 # define  FOV			120
 
-# define WIDTH	1280
+# define	COL 15   //temporaire
+# define	LINE 53  //temp
+
+# define WIDTH	1325
 # define HEIGHT	1024
 
 # define PI		3.141592653589793
