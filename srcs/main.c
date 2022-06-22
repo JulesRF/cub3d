@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/06/22 16:52:45 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/06/22 19:15:11 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,15 @@ void	my_mlx_pixel_put(t_image *data, int x, int y, int color)
 		return ;
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
+}
+
+
+double	ft_timestamp(t_mlx *mlx)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * 1000 + time.tv_usec / 1000) - mlx->start_time);
 }
 
 /* DDA ALGORIHM */
@@ -148,8 +157,20 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		int drawEnd = lineHeight / 2 + HEIGHT / 2;
 		if (drawEnd >= HEIGHT)
 			drawEnd = HEIGHT - 1;
-		drawline(x, drawStart, x, drawEnd, mlx->img, 0x00FF0000);
+
+		int	color;
+		if (side == 0)
+			color = 0xFF0000;
+		else
+			color = 0x8A0303;
+		drawline(x, drawStart, x, drawEnd, mlx->img, color);
 	}		
+	mlx->oldtime = mlx->time;
+	mlx->time = ft_timestamp(mlx);
+	double frametime = (mlx->time - mlx->oldtime) / 1000;
+	printf("%f\n",frametime);
+	mlx->Mspeed = frametime * 5.0;
+	mlx->rotSpeed = (frametime * 3.0) * (M_PI / 180);
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img->img, 0, 0);
 	mlx_destroy_image(mlx->mlx, mlx->img->img);
 }
@@ -165,24 +186,23 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 	{
 		if (mlx->player->map[(int)(mlx->player->x + mlx->player->dx * mlx->Mspeed)][(int)mlx->player->y] == 0)
 			mlx->player->x += mlx->player->dx * mlx->Mspeed;
-		if (mlx->player->map[(int)mlx->player->x][(int)(mlx->player->y + mlx->player->dy * mlx->Mspeed)]== 0)
+		if (mlx->player->map[(int)mlx->player->x][(int)(mlx->player->y + mlx->player->dy * mlx->Mspeed)] == 0)
 			mlx->player->y += mlx->player->dy * mlx->Mspeed;
 	}
 	if (keycode == 's')
 	{
-		if (mlx->player->map[(int)(mlx->player->x + mlx->player->dx * mlx->Mspeed)][(int)mlx->player->y] == 0)
+		if (mlx->player->map[(int)(mlx->player->x - mlx->player->dx * mlx->Mspeed)][(int)mlx->player->y] == 0)
 			mlx->player->x -= mlx->player->dx * mlx->Mspeed;
-		if (mlx->player->map[(int)mlx->player->x][(int)(mlx->player->y + mlx->player->dy * mlx->Mspeed)]== 0)
-			mlx->player->y -= mlx->player->dy * mlx->Mspeed;
-	}
+		if (mlx->player->map[(int)mlx->player->x][(int)(mlx->player->y - mlx->player->dy * mlx->Mspeed)] == 0)
+			mlx->player->y -= mlx->player->dy * mlx->Mspeed;	}
 	if (keycode == 'a')
 	{
 		double OldX = mlx->player->dx;
-		mlx->player->dx = OldX * cos(mlx->rotSpeed) -
+		mlx->player->dx = mlx->player->dx * cos(mlx->rotSpeed) -
 			mlx->player->dy * sin(mlx->rotSpeed);
 		mlx->player->dy = OldX * sin(mlx->rotSpeed) + mlx->player->dy * cos(mlx->rotSpeed);
 		double OldPlaneX = mlx->player->planeX;
-		mlx->player->planeX = OldPlaneX * cos(mlx->rotSpeed) - mlx->player->planeY * sin(mlx->rotSpeed);
+		mlx->player->planeX = mlx->player->planeX * cos(mlx->rotSpeed) - mlx->player->planeY * sin(mlx->rotSpeed);
 		mlx->player->planeY = OldPlaneX * sin(mlx->rotSpeed) + mlx->player->planeY * cos(mlx->rotSpeed);
 	}
 	if (keycode == 'd')
@@ -207,7 +227,7 @@ int main(int argc, char **argv)
 
 	t_mlx		mlx;
 	t_player	player = 
-	{ 22, 12, -1, 0, 0, 0.66,
+	{ 0, 0, 0, 0, 0, 0,
 		{
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -241,13 +261,15 @@ int main(int argc, char **argv)
 	player.dx = -1;
 	player.dy = 0;
 	player.planeX = 0;
-	player.planeY = 0.66;
+	player.planeY = 0.90;
 
 	mlx.mlx = mlx_init();
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "cub3d");
 	mlx.player = &player;
-	mlx.Mspeed = 1;
-	mlx.rotSpeed = 0.0872665;
+	mlx.start_time = 0;
+	mlx.start_time = ft_timestamp(&mlx);
+	mlx.time = 0;
+	mlx.oldtime = 0;
 
 
 	ft_doall(&mlx, &player);

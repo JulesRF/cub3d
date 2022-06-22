@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/06/22 16:53:19 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/06/22 17:26:33 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <sys/time.h>
 # include <math.h>
 
 # define WIDTH	1380
@@ -48,6 +49,9 @@ typedef struct s_mlx
 	void		*win;
 	t_image		*img;
 	t_player	*player;
+	double		time;
+	double		oldtime;
+	double		start_time;
 	double		Mspeed;
 	double		rotSpeed;
 }	t_mlx;
