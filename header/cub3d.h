@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/18 16:48:05 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/06/22 16:53:19 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,34 +19,8 @@
 # include <fcntl.h>
 # include <math.h>
 
-# define TILE_SIZE		25
-# define PLAYER_SIZE	10
-# define OUTLINE		0	
-# define  FOV			120
-
-# define	COL 15   //temporaire
-# define	LINE 53  //temp
-
-# define WIDTH	1325
-# define HEIGHT	1024
-
-# define PI		3.141592653589793
-
-typedef struct s_point2d
-{
-	float	x;
-	float	y;
-}	t_point2d;
-
-typedef struct s_line
-{
-	int	dx;
-	int	dy;
-	int	sx;
-	int	sy;
-	int	err;
-	int	color;
-}	t_line;
+# define WIDTH	1380
+# define HEIGHT	800
 
 typedef struct s_image
 {
@@ -63,7 +37,9 @@ typedef struct s_player
 	float	y;
 	float	dx;
 	float	dy;
-	float	angle;
+	float	planeX;
+	float	planeY;
+	int		map[24][24];
 }	t_player;
 
 typedef struct s_mlx
@@ -72,7 +48,8 @@ typedef struct s_mlx
 	void		*win;
 	t_image		*img;
 	t_player	*player;
-	char		**map;
+	double		Mspeed;
+	double		rotSpeed;
 }	t_mlx;
 
 #endif

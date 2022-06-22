@@ -6,7 +6,7 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/05/15 18:28:43 by ascotto-         ###   ########.fr        #
+#    Updated: 2022/06/22 16:00:35 by ascotto-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,10 +41,10 @@ all: $(NAME)
 $(OBJ_DIR)/%.o: $(PATH)/%.c
 	@$(shell mkdir -p $(OBJ_DIR))
 	@printf "Compiling $< ...\n"
-	@$(shell gcc $(FLAGS) -I $(INCLUDES) -c $< -o $@)
+	@$(shell cc $(FLAGS) -I $(INCLUDES) -c $< -o $@)
 
 $(NAME): $(OBJ)
-	@$(shell gcc $(OBJ) $(MLXFLAGS) -o $(NAME))
+	@$(shell cc $(OBJ) $(MLXFLAGS) -o $(NAME))
 	@printf "Executable $@ created !\n"
 
 clean:
