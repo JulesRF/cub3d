@@ -20,10 +20,13 @@
 # include <sys/time.h>
 # include <math.h>
 
-# define WIDTH	1380
-# define HEIGHT	800
+# define WIDTH	1200
+# define HEIGHT	1200
 
-# define TILE_SIZE		25
+
+# define HEIGHT_TOP	HEIGHT / 2
+
+# define TILE_SIZE		50
 # define PLAYER_SIZE	10
 # define OUTLINE		1
 
@@ -44,7 +47,7 @@ typedef struct s_player
 	float	dy;
 	float	planeX;
 	float	planeY;
-	int		map[24][24];
+	int		map[12][24];
 }	t_player;
 
 typedef struct s_mlx

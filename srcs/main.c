@@ -78,8 +78,9 @@ void	ft_draw_player(t_mlx *mlx, int x, int y)
 
 	i = 0;
 
-	x = x * 5;
-	y = y * 5;
+	x = floorf(x * TILE_SIZE);
+	y = floorf(y * TILE_SIZE);
+	y = y + HEIGHT_TOP;
 	while (x + i < x + (PLAYER_SIZE))
 	{
 		j = 0;
@@ -92,40 +93,40 @@ void	ft_draw_player(t_mlx *mlx, int x, int y)
 	}
 }
 
-void	ft_draw_miniap(t_mlx *mlx, int width, int height)
+void	ft_draw_minimap(t_mlx *mlx, int w, int h)
 {
 	int		x;
 	int		y;
+	int		i;
 
-	y = 0;
-	(void)width;
-	(void)height;
-	while (y < 24)
+	y = HEIGHT_TOP;
+	i = 0;
+	while (i < h)
 	{
 		x = 0;
-		while (x < 24)
+		while (x < w)
 		{
-			if (mlx->player->map[y][x] == 1)
-				ft_draw_square(mlx, x * TILE_SIZE, y * TILE_SIZE, 0x606060);
-			if (mlx->player->map[y][x] == 0)
-				ft_draw_square(mlx, x * TILE_SIZE, y * TILE_SIZE, 0xC0C0C0);
+			if (mlx->player->map[i][x] == 1)
+				ft_draw_square(mlx, x * TILE_SIZE, (i * TILE_SIZE) + y, 0x606060);
+			if (mlx->player->map[i][x] == 0)
+				ft_draw_square(mlx, x * TILE_SIZE, (i * TILE_SIZE) + y, 0xC0C0C0);
 			x++;
 		}
-		y++;
+		i++;
 	}
 	ft_draw_player(mlx, mlx->player->x, mlx->player->y);
 }
 
-void	ft_draw_map(t_mlx *mlx, int width, int height)
+void	ft_draw_map(t_mlx *mlx)
 {
 	int		x;
 	int		y;
 
 	y = 0;
-	while (y < height)
+	while (y < HEIGHT_TOP)
 	{
-		x = 0;
-		while (x++ < width)
+		x = -1;
+		while (++x < WIDTH)
 			my_mlx_pixel_put(mlx->img, x, y, 0x0000FF00);
 		y++;
 	}
@@ -141,10 +142,9 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 			&img.line_length, &img.endian);
 
 
-	//ft_draw_minimap(mlx, WIDTH, HEIGHT);
-	//mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img->img, 0, 0);
-	//return ; TMP TEST MINIMAP
-	ft_draw_map(mlx, WIDTH, HEIGHT);
+	ft_draw_map(mlx);
+	ft_draw_minimap(mlx, 24, 12);
+	printf("PLAYER X = %f\t PlayerY = %f\n", mlx->player->x, mlx->player->y);
 	for (int x = 0; x < WIDTH ; x++)
 	{
 		double camX = 2 * x / (double)WIDTH - 1;
@@ -200,7 +200,7 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 				mapy += stepY;
 				side = 1;
 			}
-			if (player->map[mapx][mapy] > 0)
+			if (player->map[mapy][mapx] > 0)
 				hit = 1;
 		}
 
@@ -210,14 +210,14 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 			wall_distance = sideY - deltaY;
 
 		//SECOND PART : compute pixel from the wall_distance we got
-		int lineHeight = (int)(HEIGHT / wall_distance);
+		int lineHeight = (int)(HEIGHT_TOP / wall_distance);
 
-		int drawStart = -lineHeight / 2 + HEIGHT / 2;
+		int drawStart = -lineHeight / 2 + HEIGHT_TOP / 2;
 		if (drawStart < 0)
 			drawStart = 0;
-		int drawEnd = lineHeight / 2 + HEIGHT / 2;
-		if (drawEnd >= HEIGHT)
-			drawEnd = HEIGHT - 1;
+		int drawEnd = lineHeight / 2 + HEIGHT_TOP / 2;
+		if (drawEnd >= HEIGHT_TOP)
+			drawEnd = HEIGHT_TOP - 1;
 
 		int	color;
 		if (side == 0)
@@ -238,19 +238,21 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 		exit(EXIT_SUCCESS);
 		return (0);
 	}
+	
 	if (keycode == 'w')
 	{
-		if (mlx->player->map[(int)(mlx->player->x + mlx->player->dx * mlx->Mspeed)][(int)mlx->player->y] == 0)
+		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x + mlx->player->dx * mlx->Mspeed)] == 0)
 			mlx->player->x += mlx->player->dx * mlx->Mspeed;
-		if (mlx->player->map[(int)mlx->player->x][(int)(mlx->player->y + mlx->player->dy * mlx->Mspeed)] == 0)
+		if (mlx->player->map[(int)(mlx->player->y + mlx->player->dy * mlx->Mspeed)][(int)mlx->player->x] == 0)
 			mlx->player->y += mlx->player->dy * mlx->Mspeed;
 	}
 	if (keycode == 's')
 	{
-		if (mlx->player->map[(int)(mlx->player->x - mlx->player->dx * mlx->Mspeed)][(int)mlx->player->y] == 0)
+		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x - mlx->player->dx * mlx->Mspeed)]== 0)
 			mlx->player->x -= mlx->player->dx * mlx->Mspeed;
-		if (mlx->player->map[(int)mlx->player->x][(int)(mlx->player->y - mlx->player->dy * mlx->Mspeed)] == 0)
-			mlx->player->y -= mlx->player->dy * mlx->Mspeed;	}
+		if (mlx->player->map[(int)(mlx->player->y - mlx->player->dy * mlx->Mspeed)][(int)mlx->player->x] == 0)
+			mlx->player->y -= mlx->player->dy * mlx->Mspeed;
+	}
 	if (keycode == 'a')
 	{
 		double OldX = mlx->player->dx;
@@ -287,23 +289,11 @@ int main(int argc, char **argv)
 		{
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+			{1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+			{1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1},
+			{1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -312,8 +302,8 @@ int main(int argc, char **argv)
 		}};
 
 
-	player.x = 22;
-	player.y = 12;
+	player.x = 16;
+	player.y = 8;
 	player.dx = -1;
 	player.dy = 0;
 	player.planeX = 0;
@@ -322,7 +312,7 @@ int main(int argc, char **argv)
 	mlx.mlx = mlx_init();
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "cub3d");
 	mlx.player = &player;
-	mlx.Mspeed = 1;
+	mlx.Mspeed = 0.5;
 	mlx.rotSpeed = 0.1;
 
 
