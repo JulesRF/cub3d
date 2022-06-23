@@ -51,6 +51,24 @@ void	ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
 	}
 }
 
+void	ft_draw_small_square(t_mlx *mlx, int x, int y, int color)
+{
+	double	i;
+	double	j;
+
+	i = 0;
+	while (x + i < x + (3))
+	{
+		j = 0;
+		while (y + j < y + (3))
+		{
+			my_mlx_pixel_put(mlx->img, x + i, y + j, color);
+			j++;
+		}
+		i++;
+	}
+}
+
 void	ft_draw_square(t_mlx *mlx, int x, int y, int color)
 {
 	double	i;
@@ -71,22 +89,21 @@ void	ft_draw_square(t_mlx *mlx, int x, int y, int color)
 	}
 }
 
-void	ft_draw_player(t_mlx *mlx, int x, int y)
+void	ft_draw_player(t_mlx *mlx, float x, float y)
 {
-	double		i;
-	double		j;
+	double	i;
+	double	j;
 
-	i = 0;
-
-	x = floorf(x * TILE_SIZE);
-	y = floorf(y * TILE_SIZE);
+	x = x * TILE_SIZE;
+	y = y * TILE_SIZE;
 	y = y + HEIGHT_TOP;
-	while (x + i < x + (PLAYER_SIZE))
+	i = 0;
+	while (y + i < y + (PLAYER_SIZE))
 	{
 		j = 0;
-		while (y + j < y + (PLAYER_SIZE))
+		while (x + j < x + (PLAYER_SIZE))
 		{
-			my_mlx_pixel_put(mlx->img, x + i, y + j, 0x00FF0000);
+			my_mlx_pixel_put(mlx->img, floorf(x) + j, floorf(y) + i, 0x0FFFF00);
 			j++;
 		}
 		i++;
@@ -121,13 +138,17 @@ void	ft_draw_map(t_mlx *mlx)
 {
 	int		x;
 	int		y;
+	int		color;
 
 	y = 0;
+	color = 0x00FFFF;
 	while (y < HEIGHT_TOP)
 	{
+		if (y > HEIGHT_TOP / 2)
+			color = 0x00000000;
 		x = -1;
 		while (++x < WIDTH)
-			my_mlx_pixel_put(mlx->img, x, y, 0x0000FF00);
+			my_mlx_pixel_put(mlx->img, x, y, color);
 		y++;
 	}
 }
@@ -147,7 +168,7 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 	printf("PLAYER X = %f\t PlayerY = %f\n", mlx->player->x, mlx->player->y);
 	for (int x = 0; x < WIDTH ; x++)
 	{
-		double camX = 2 * x / (double)WIDTH - 1;
+		double camX = -(2 * x / (double)WIDTH - 1);
 		double rX = player->dx + player->planeX * camX;
 		double rY = player->dy + player->planeY * camX;
 		int mapx = (int)player->x;
@@ -188,6 +209,9 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		}
 		while (hit == 0)
 		{
+
+			//ft_draw_small_square(mlx, mapx * TILE_SIZE,
+			//		mapy * TILE_SIZE + HEIGHT_TOP, 0x00FFFF00);
 			if (sideX < sideY)
 			{
 				sideX += deltaX;
@@ -202,6 +226,12 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 			}
 			if (player->map[mapy][mapx] > 0)
 				hit = 1;
+			if (hit == 0)
+			{
+				ft_drawline(floorf(mlx->player->x * TILE_SIZE),
+					floorf(mlx->player->y * TILE_SIZE + HEIGHT_TOP),
+					mapx * TILE_SIZE , mapy * TILE_SIZE + HEIGHT_TOP, mlx->img, 0x00FF0000);
+			}
 		}
 
 		if (side == 0)
@@ -223,7 +253,7 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		if (side == 0)
 			color = 0xFF0000;
 		else
-			color = 0x8A0303;
+			color = 0x8A0000;
 		(void)color;
 		ft_drawline(x, drawStart, x, drawEnd, mlx->img, color);
 	}		
@@ -253,7 +283,7 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 		if (mlx->player->map[(int)(mlx->player->y - mlx->player->dy * mlx->Mspeed)][(int)mlx->player->x] == 0)
 			mlx->player->y -= mlx->player->dy * mlx->Mspeed;
 	}
-	if (keycode == 'a')
+	if (keycode == 'd')
 	{
 		double OldX = mlx->player->dx;
 		mlx->player->dx = mlx->player->dx * cos(mlx->rotSpeed) -
@@ -263,7 +293,7 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 		mlx->player->planeX = mlx->player->planeX * cos(mlx->rotSpeed) - mlx->player->planeY * sin(mlx->rotSpeed);
 		mlx->player->planeY = OldPlaneX * sin(mlx->rotSpeed) + mlx->player->planeY * cos(mlx->rotSpeed);
 	}
-	if (keycode == 'd')
+	if (keycode == 'a')
 	{
 		double OldX = mlx->player->dx;
 		mlx->player->dx = OldX * cos(-mlx->rotSpeed) -
@@ -307,13 +337,13 @@ int main(int argc, char **argv)
 	player.dx = -1;
 	player.dy = 0;
 	player.planeX = 0;
-	player.planeY = 0.66;
+	player.planeY = 0.70;
 
 	mlx.mlx = mlx_init();
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "cub3d");
 	mlx.player = &player;
-	mlx.Mspeed = 0.5;
-	mlx.rotSpeed = 0.1;
+	mlx.Mspeed = 0.1;
+	mlx.rotSpeed = 0.05;
 
 
 	ft_doall(&mlx, &player);
