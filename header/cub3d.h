@@ -23,6 +23,10 @@
 # define WIDTH	1380
 # define HEIGHT	800
 
+# define TILE_SIZE		25
+# define PLAYER_SIZE	10
+# define OUTLINE		1
+
 typedef struct s_image
 {
 	void	*img;
@@ -49,9 +53,6 @@ typedef struct s_mlx
 	void		*win;
 	t_image		*img;
 	t_player	*player;
-	double		time;
-	double		oldtime;
-	double		start_time;
 	double		Mspeed;
 	double		rotSpeed;
 }	t_mlx;

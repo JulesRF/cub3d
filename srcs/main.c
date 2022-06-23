@@ -23,16 +23,8 @@ void	my_mlx_pixel_put(t_image *data, int x, int y, int color)
 }
 
 
-double	ft_timestamp(t_mlx *mlx)
-{
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	return ((time.tv_sec * 1000 + time.tv_usec / 1000) - mlx->start_time);
-}
-
 /* DDA ALGORIHM */
-void	drawline(int x0, int y0, int x1, int y1, void *img, int color)
+void	ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
 {
 	float	dx;
 	float	dy;
@@ -50,12 +42,78 @@ void	drawline(int x0, int y0, int x1, int y1, void *img, int color)
 	dy = dy / len;
 	x = x0;
 	y = y0;
+	//A mettre dans une autre fonction. qui prend x0, y0, dx et dy
 	for (int i = 0; i < len ; i++)
 	{	
 		my_mlx_pixel_put(img, (int)(floorf(x)), (int)(floorf(y)), color);
 		x += dx;
 		y += dy;
 	}
+}
+
+void	ft_draw_square(t_mlx *mlx, int x, int y, int color)
+{
+	double	i;
+	double	j;
+
+	i = 0;
+	while (x + i < x + (TILE_SIZE))
+	{
+		j = 0;
+		while (y + j < y + (TILE_SIZE))
+		{
+			my_mlx_pixel_put(mlx->img, x + i, y + j, color);
+			if (i >= TILE_SIZE - OUTLINE || j >= TILE_SIZE - OUTLINE)
+				my_mlx_pixel_put(mlx->img, x + i, y + j, 0x000000);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	ft_draw_player(t_mlx *mlx, int x, int y)
+{
+	double		i;
+	double		j;
+
+	i = 0;
+
+	x = x * 5;
+	y = y * 5;
+	while (x + i < x + (PLAYER_SIZE))
+	{
+		j = 0;
+		while (y + j < y + (PLAYER_SIZE))
+		{
+			my_mlx_pixel_put(mlx->img, x + i, y + j, 0x00FF0000);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	ft_draw_miniap(t_mlx *mlx, int width, int height)
+{
+	int		x;
+	int		y;
+
+	y = 0;
+	(void)width;
+	(void)height;
+	while (y < 24)
+	{
+		x = 0;
+		while (x < 24)
+		{
+			if (mlx->player->map[y][x] == 1)
+				ft_draw_square(mlx, x * TILE_SIZE, y * TILE_SIZE, 0x606060);
+			if (mlx->player->map[y][x] == 0)
+				ft_draw_square(mlx, x * TILE_SIZE, y * TILE_SIZE, 0xC0C0C0);
+			x++;
+		}
+		y++;
+	}
+	ft_draw_player(mlx, mlx->player->x, mlx->player->y);
 }
 
 void	ft_draw_map(t_mlx *mlx, int width, int height)
@@ -83,6 +141,9 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 			&img.line_length, &img.endian);
 
 
+	//ft_draw_minimap(mlx, WIDTH, HEIGHT);
+	//mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img->img, 0, 0);
+	//return ; TMP TEST MINIMAP
 	ft_draw_map(mlx, WIDTH, HEIGHT);
 	for (int x = 0; x < WIDTH ; x++)
 	{
@@ -115,7 +176,7 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 			stepX = 1;
 			sideX = (mapx + 1.0 - player->x) * deltaX;
 		}
-		if (rX < 0)
+		if (rY < 0)
 		{
 			stepY = -1;
 			sideY = (player->y - mapy) * deltaY;
@@ -163,14 +224,9 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 			color = 0xFF0000;
 		else
 			color = 0x8A0303;
-		drawline(x, drawStart, x, drawEnd, mlx->img, color);
+		(void)color;
+		ft_drawline(x, drawStart, x, drawEnd, mlx->img, color);
 	}		
-	mlx->oldtime = mlx->time;
-	mlx->time = ft_timestamp(mlx);
-	double frametime = (mlx->time - mlx->oldtime) / 1000;
-	printf("%f\n",frametime);
-	mlx->Mspeed = frametime * 5.0;
-	mlx->rotSpeed = (frametime * 3.0) * (M_PI / 180);
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img->img, 0, 0);
 	mlx_destroy_image(mlx->mlx, mlx->img->img);
 }
@@ -261,15 +317,13 @@ int main(int argc, char **argv)
 	player.dx = -1;
 	player.dy = 0;
 	player.planeX = 0;
-	player.planeY = 0.90;
+	player.planeY = 0.66;
 
 	mlx.mlx = mlx_init();
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "cub3d");
 	mlx.player = &player;
-	mlx.start_time = 0;
-	mlx.start_time = ft_timestamp(&mlx);
-	mlx.time = 0;
-	mlx.oldtime = 0;
+	mlx.Mspeed = 1;
+	mlx.rotSpeed = 0.1;
 
 
 	ft_doall(&mlx, &player);
