@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/06/26 14:39:29 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/06/26 15:50:19 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@
 
 # define TILE_W			WIDTH / W_MAP
 # define TILE_H			HEIGHT_TOP / H_MAP
-# define PLAYER_SIZE	5
-# define OUTLINE		0
+# define PLAYER_SIZE	TILE_W / 4
+# define OUTLINE		1
 
 typedef struct s_image
 {
