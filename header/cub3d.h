@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/06/22 17:26:33 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/06/26 14:39:29 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,15 @@
 # define WIDTH	1200
 # define HEIGHT	1200
 
+# define W_MAP	24
+# define H_MAP	24
 
 # define HEIGHT_TOP	HEIGHT / 2
 
-# define TILE_SIZE		50
-# define PLAYER_SIZE	10
-# define OUTLINE		1
+# define TILE_W			WIDTH / W_MAP
+# define TILE_H			HEIGHT_TOP / H_MAP
+# define PLAYER_SIZE	5
+# define OUTLINE		0
 
 typedef struct s_image
 {
@@ -47,7 +50,7 @@ typedef struct s_player
 	float	dy;
 	float	planeX;
 	float	planeY;
-	int		map[12][24];
+	int		map[H_MAP][W_MAP];
 }	t_player;
 
 typedef struct s_mlx

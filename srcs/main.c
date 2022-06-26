@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/06/22 19:15:11 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/06/26 14:46:57 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	my_mlx_pixel_put(t_image *data, int x, int y, int color)
 
 
 /* DDA ALGORIHM */
+/*
 void	ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
 {
 	float	dx;
@@ -48,6 +49,22 @@ void	ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
 		my_mlx_pixel_put(img, (int)(floorf(x)), (int)(floorf(y)), color);
 		x += dx;
 		y += dy;
+	}
+} */
+
+//BRESENHAM
+void ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
+{
+	int dx =  abs (x1 - x0), sx = x0 < x1 ? 1 : -1;
+	int dy = -abs (y1 - y0), sy = y0 < y1 ? 1 : -1; 
+	int err = dx + dy, e2; /* error value e_xy */
+
+	for (;;){  /* loop */
+		my_mlx_pixel_put(img, x0, y0, color);
+		if (x0 == x1 && y0 == y1) break;
+		e2 = 2 * err;
+		if (e2 >= dy) { err += dy; x0 += sx; } /* e_xy+e_x > 0 */
+		if (e2 <= dx) { err += dx; y0 += sy; } /* e_xy+e_y < 0 */
 	}
 }
 
@@ -75,13 +92,13 @@ void	ft_draw_square(t_mlx *mlx, int x, int y, int color)
 	double	j;
 
 	i = 0;
-	while (x + i < x + (TILE_SIZE))
+	while (y + i < y + (TILE_H))
 	{
 		j = 0;
-		while (y + j < y + (TILE_SIZE))
+		while (x + j < x + (TILE_W))
 		{
 			my_mlx_pixel_put(mlx->img, x + i, y + j, color);
-			if (i >= TILE_SIZE - OUTLINE || j >= TILE_SIZE - OUTLINE)
+			if (i >= TILE_H - OUTLINE || j >= TILE_W - OUTLINE)
 				my_mlx_pixel_put(mlx->img, x + i, y + j, 0x000000);
 			j++;
 		}
@@ -94,8 +111,8 @@ void	ft_draw_player(t_mlx *mlx, float x, float y)
 	double	i;
 	double	j;
 
-	x = x * TILE_SIZE;
-	y = y * TILE_SIZE;
+	x = x * TILE_W;
+	y = y * TILE_H;
 	y = y + HEIGHT_TOP;
 	i = 0;
 	while (y + i < y + (PLAYER_SIZE))
@@ -124,9 +141,9 @@ void	ft_draw_minimap(t_mlx *mlx, int w, int h)
 		while (x < w)
 		{
 			if (mlx->player->map[i][x] == 1)
-				ft_draw_square(mlx, x * TILE_SIZE, (i * TILE_SIZE) + y, 0x606060);
+				ft_draw_square(mlx, x * TILE_W, i * TILE_H + y, 0x606060);
 			if (mlx->player->map[i][x] == 0)
-				ft_draw_square(mlx, x * TILE_SIZE, (i * TILE_SIZE) + y, 0xC0C0C0);
+				ft_draw_square(mlx, x * TILE_W , i * TILE_H + y, 0xC0C0C0);
 			x++;
 		}
 		i++;
@@ -164,8 +181,8 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 
 
 	ft_draw_map(mlx);
-	ft_draw_minimap(mlx, 24, 12);
-	printf("PLAYER X = %f\t PlayerY = %f\n", mlx->player->x, mlx->player->y);
+	ft_draw_minimap(mlx, W_MAP, H_MAP);
+	//printf("PLAYER X = %f\t PlayerY = %f\n", mlx->player->x, mlx->player->y);
 	for (int x = 0; x < WIDTH ; x++)
 	{
 		double camX = -(2 * x / (double)WIDTH - 1);
@@ -210,8 +227,8 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		while (hit == 0)
 		{
 
-			//ft_draw_small_square(mlx, mapx * TILE_SIZE,
-			//		mapy * TILE_SIZE + HEIGHT_TOP, 0x00FFFF00);
+		//	ft_draw_small_square(mlx, mapx * TILE_SIZE,
+		//			mapy * TILE_SIZE + HEIGHT_TOP, 0x00FFFF00);
 			if (sideX < sideY)
 			{
 				sideX += deltaX;
@@ -226,13 +243,14 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 			}
 			if (player->map[mapy][mapx] > 0)
 				hit = 1;
-			if (hit == 0)
-			{
-				ft_drawline(floorf(mlx->player->x * TILE_SIZE),
-					floorf(mlx->player->y * TILE_SIZE + HEIGHT_TOP),
-					mapx * TILE_SIZE , mapy * TILE_SIZE + HEIGHT_TOP, mlx->img, 0x00FF0000);
-			}
 		}
+		if (stepX < 0) 
+			mapx = mapx - stepX;
+		if (stepY < 0)
+			mapy = mapy - stepY;
+		ft_drawline((mlx->player->x * TILE_W + PLAYER_SIZE / 2),
+			(mlx->player->y * TILE_H + HEIGHT_TOP + PLAYER_SIZE / 2),
+			mapx * TILE_W , mapy * TILE_H + HEIGHT_TOP, mlx->img, 0x00FF0000);
 
 		if (side == 0)
 			wall_distance = sideX - deltaX;
@@ -304,7 +322,18 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 		mlx->player->planeY = OldPlaneX * sin(-mlx->rotSpeed) + mlx->player->planeY * cos(-mlx->rotSpeed);
 
 	}
+	if (keycode == 65505)
+			mlx->Mspeed = 0.3;
+//	else
+//		printf("keycode = %d\n", keycode);
 	ft_doall(mlx, mlx->player);
+	return (1);
+}
+
+int	ft_release_hooks(int keycode, t_mlx *mlx)
+{
+	if (keycode == 65505)
+			mlx->Mspeed = 0.1;
 	return (1);
 }
 
@@ -317,13 +346,25 @@ int main(int argc, char **argv)
 	t_player	player = 
 	{ 0, 0, 0, 0, 0, 0,
 		{
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,1,1,1,1,1},
+			{1,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,1,0,0,0,1},
+			{1,0,1,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,1,0,0,0,1},
+			{1,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,1,0,0,0,1},
+			{1,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,1,0,0,0,1},
+			{1,0,0,0,0,0,0,0,0,0,1,1,0,1,2,2,2,2,2,1,0,0,0,1},
+			{1,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,1,1,1,0,0,0,1},
+			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1},
+			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -348,5 +389,6 @@ int main(int argc, char **argv)
 
 	ft_doall(&mlx, &player);
 	mlx_hook(mlx.win, 2, 1L << 0, ft_key_hooks, &mlx);
+	mlx_hook(mlx.win, 3, 1L << 1, ft_release_hooks, &mlx);
 	mlx_loop(mlx.mlx);
 }
