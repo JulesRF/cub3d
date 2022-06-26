@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/06/26 15:59:58 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/06/26 17:31:51 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,27 @@ void	ft_draw_small_square(t_mlx *mlx, int x, int y, int color)
 	}
 }
 
+void	ft_minisquare(t_mlx *mlx, int x, int y, int color)
+{
+	double	i;
+	double	j;
+
+	i = 0;
+	while (y + i < y + (TILE_H))
+	{
+		j = 0;
+		while (x + j < x + (TILE_W))
+		{
+			my_mlx_pixel_put(mlx->img, x + j, y + i, color);
+			j++;
+		}
+		i++;
+	}
+	ft_drawline(mlx->player->x * TILE_W, mlx->player->y * TILE_H + HEIGHT_TOP,
+	x + TILE_W / 2, y + TILE_H / 2, mlx->img, 0x00FF0000);
+}
+
+
 void	ft_draw_square(t_mlx *mlx, int x, int y, int color)
 {
 	double	i;
@@ -162,7 +183,7 @@ void	ft_draw_map(t_mlx *mlx)
 	while (y < HEIGHT_TOP)
 	{
 		if (y > HEIGHT_TOP / 2)
-			color = 0x00000000;
+			color = 0x00000020;
 		x = -1;
 		while (++x < WIDTH)
 			my_mlx_pixel_put(mlx->img, x, y, color);
@@ -241,28 +262,7 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 			if (player->map[mapy][mapx] > 0)
 			{
 				
-				if (side == 1)
-				{
-					ft_drawline((mlx->player->x * TILE_W + PLAYER_SIZE / 2),
-						(mlx->player->y * TILE_H + HEIGHT_TOP + PLAYER_SIZE / 2),
-						mapx * TILE_W + TILE_W / 2,
-						mapy * TILE_H + HEIGHT_TOP + TILE_H,
-						mlx->img, 0x00FF0000);
-
-					ft_draw_small_square(mlx, mapx * TILE_W + TILE_W /2,
-						mapy * TILE_H + HEIGHT_TOP + TILE_H, 0x00FFFF00);
-				}
-				else
-				{
-					ft_drawline((mlx->player->x * TILE_W + PLAYER_SIZE / 2),
-						(mlx->player->y * TILE_H + HEIGHT_TOP + PLAYER_SIZE / 2),
-						mapx * TILE_W + TILE_W,
-						mapy * TILE_H + HEIGHT_TOP + TILE_H / 2,
-						mlx->img, 0x00FF0000);
-
-					ft_draw_small_square(mlx, mapx * TILE_W + TILE_W,
-						mapy * TILE_H + HEIGHT_TOP + TILE_H / 2, 0x00FFFF00);
-				}
+				ft_minisquare(mlx, mapx * TILE_W, mapy * TILE_H + HEIGHT_TOP, 0x00FF0000);
 				hit = 1;
 			}
 		}
