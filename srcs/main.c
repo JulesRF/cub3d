@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/06/27 11:29:47 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/06/27 11:49:37 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,7 +322,21 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 		if (mlx->player->map[(int)(mlx->player->y - mlx->player->dy * mlx->player->Mspeed)][(int)mlx->player->x] == 0)
 			mlx->player->y -= mlx->player->dy * mlx->player->Mspeed;
 	}
+	if (keycode == 'a')
+	{
+		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x + mlx->player->dx * mlx->player->Mspeed)] == 0)
+			mlx->player->x += mlx->player->planeX * mlx->player->Mspeed;
+		if (mlx->player->map[(int)(mlx->player->y + mlx->player->planeY * mlx->player->Mspeed)][(int)mlx->player->x] == 0)
+			mlx->player->y += mlx->player->planeY * mlx->player->Mspeed;
+	}
 	if (keycode == 'd')
+	{
+		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x - mlx->player->dx * mlx->player->Mspeed)]== 0)
+			mlx->player->x -= mlx->player->planeX * mlx->player->Mspeed;
+		if (mlx->player->map[(int)(mlx->player->y - mlx->player->planeY * mlx->player->Mspeed)][(int)mlx->player->x] == 0)
+			mlx->player->y -= mlx->player->planeY * mlx->player->Mspeed;
+	}
+	if (keycode == 65363)
 	{
 		double OldX = mlx->player->dx;
 		mlx->player->dx = mlx->player->dx * cos(mlx->player->rotSpeed) -
@@ -332,7 +346,7 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 		mlx->player->planeX = mlx->player->planeX * cos(mlx->player->rotSpeed) - mlx->player->planeY * sin(mlx->player->rotSpeed);
 		mlx->player->planeY = OldPlaneX * sin(mlx->player->rotSpeed) + mlx->player->planeY * cos(mlx->player->rotSpeed);
 	}
-	if (keycode == 'a')
+	if (keycode == 65361)
 	{
 		double OldX = mlx->player->dx;
 		mlx->player->dx = OldX * cos(-mlx->player->rotSpeed) -
@@ -345,8 +359,8 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 	}
 	if (keycode == 65505)
 			mlx->player->Mspeed = 0.3;
-//	else
-//		printf("keycode = %d\n", keycode);
+	else
+		printf("keycode = %d\n", keycode);
 	ft_doall(mlx, mlx->player);
 	return (1);
 }
