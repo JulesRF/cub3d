@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/06/26 17:31:51 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/06/27 11:29:47 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	my_mlx_pixel_put(t_image *data, int x, int y, int color)
 
 
 /* DDA ALGORIHM */
-/*
+
 void	ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
 {
 	float	dx;
@@ -50,23 +50,24 @@ void	ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
 		x += dx;
 		y += dy;
 	}
-} */
+} 
 
 //BRESENHAM
+/*
 void ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
 {
 	int dx =  abs (x1 - x0), sx = x0 < x1 ? 1 : -1;
 	int dy = -abs (y1 - y0), sy = y0 < y1 ? 1 : -1; 
-	int err = dx + dy, e2; /* error value e_xy */
+	int err = dx + dy, e2;  //error value e_xy
 
-	for (;;){  /* loop */
+	for (;;){
 		my_mlx_pixel_put(img, x0, y0, color);
 		if (x0 == x1 && y0 == y1) break;
 		e2 = 2 * err;
-		if (e2 >= dy) { err += dy; x0 += sx; } /* e_xy+e_x > 0 */
-		if (e2 <= dx) { err += dx; y0 += sy; } /* e_xy+e_y < 0 */
+		if (e2 >= dy) { err += dy; x0 += sx; } // e_xy+e_x > 0 
+		if (e2 <= dx) { err += dx; y0 += sy; } // e_xy+e_y < 0 
 	}
-}
+}*/
 
 void	ft_draw_small_square(t_mlx *mlx, int x, int y, int color)
 {
@@ -102,8 +103,6 @@ void	ft_minisquare(t_mlx *mlx, int x, int y, int color)
 		}
 		i++;
 	}
-	ft_drawline(mlx->player->x * TILE_W, mlx->player->y * TILE_H + HEIGHT_TOP,
-	x + TILE_W / 2, y + TILE_H / 2, mlx->img, 0x00FF0000);
 }
 
 
@@ -161,7 +160,7 @@ void	ft_draw_minimap(t_mlx *mlx, int w, int h)
 		x = 0;
 		while (x < w)
 		{
-			if (mlx->player->map[i][x] == 1)
+			if (mlx->player->map[i][x] > 0)
 				ft_draw_square(mlx, x * TILE_W, i * TILE_H + y, 0x606060);
 			if (mlx->player->map[i][x] == 0)
 				ft_draw_square(mlx, x * TILE_W , i * TILE_H + y, 0xC0C0C0);
@@ -203,7 +202,6 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 
 	ft_draw_map(mlx);
 	ft_draw_minimap(mlx, W_MAP, H_MAP);
-	printf("PLAYER X = %f\t PlayerY = %f\n", mlx->player->x, mlx->player->y);
 	for (int x = 0; x < WIDTH ; x++)
 	{
 		double camX = -(2 * x / (double)WIDTH - 1);
@@ -260,11 +258,7 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 				side = 1;
 			}
 			if (player->map[mapy][mapx] > 0)
-			{
-				
-				ft_minisquare(mlx, mapx * TILE_W, mapy * TILE_H + HEIGHT_TOP, 0x00FF0000);
 				hit = 1;
-			}
 		}
 		if (stepX < 0) 
 			mapx = mapx - stepX;
@@ -274,6 +268,15 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 			wall_distance = sideX - deltaX;
 		else
 			wall_distance = sideY - deltaY;
+
+		double wallX; //where exactly the wall was hit
+		double wallY; //where exactly the wall was hit
+		wallY = mlx->player->y + wall_distance * rY;
+		wallX= mlx->player->x + wall_distance * rX;
+
+		ft_drawline((mlx->player->x * TILE_W + PLAYER_SIZE / 2),
+			(mlx->player->y * TILE_H + HEIGHT_TOP + PLAYER_SIZE / 2),
+			wallX * TILE_W , wallY * TILE_H + HEIGHT_TOP, mlx->img, 0x00FF0000);
 
 		//SECOND PART : compute pixel from the wall_distance we got
 		int lineHeight = (int)(HEIGHT_TOP / wall_distance);
@@ -307,41 +310,41 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 	
 	if (keycode == 'w')
 	{
-		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x + mlx->player->dx * mlx->Mspeed)] == 0)
-			mlx->player->x += mlx->player->dx * mlx->Mspeed;
-		if (mlx->player->map[(int)(mlx->player->y + mlx->player->dy * mlx->Mspeed)][(int)mlx->player->x] == 0)
-			mlx->player->y += mlx->player->dy * mlx->Mspeed;
+		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x + mlx->player->dx * mlx->player->Mspeed)] == 0)
+			mlx->player->x += mlx->player->dx * mlx->player->Mspeed;
+		if (mlx->player->map[(int)(mlx->player->y + mlx->player->dy * mlx->player->Mspeed)][(int)mlx->player->x] == 0)
+			mlx->player->y += mlx->player->dy * mlx->player->Mspeed;
 	}
 	if (keycode == 's')
 	{
-		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x - mlx->player->dx * mlx->Mspeed)]== 0)
-			mlx->player->x -= mlx->player->dx * mlx->Mspeed;
-		if (mlx->player->map[(int)(mlx->player->y - mlx->player->dy * mlx->Mspeed)][(int)mlx->player->x] == 0)
-			mlx->player->y -= mlx->player->dy * mlx->Mspeed;
+		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x - mlx->player->dx * mlx->player->Mspeed)]== 0)
+			mlx->player->x -= mlx->player->dx * mlx->player->Mspeed;
+		if (mlx->player->map[(int)(mlx->player->y - mlx->player->dy * mlx->player->Mspeed)][(int)mlx->player->x] == 0)
+			mlx->player->y -= mlx->player->dy * mlx->player->Mspeed;
 	}
 	if (keycode == 'd')
 	{
 		double OldX = mlx->player->dx;
-		mlx->player->dx = mlx->player->dx * cos(mlx->rotSpeed) -
-			mlx->player->dy * sin(mlx->rotSpeed);
-		mlx->player->dy = OldX * sin(mlx->rotSpeed) + mlx->player->dy * cos(mlx->rotSpeed);
+		mlx->player->dx = mlx->player->dx * cos(mlx->player->rotSpeed) -
+			mlx->player->dy * sin(mlx->player->rotSpeed);
+		mlx->player->dy = OldX * sin(mlx->player->rotSpeed) + mlx->player->dy * cos(mlx->player->rotSpeed);
 		double OldPlaneX = mlx->player->planeX;
-		mlx->player->planeX = mlx->player->planeX * cos(mlx->rotSpeed) - mlx->player->planeY * sin(mlx->rotSpeed);
-		mlx->player->planeY = OldPlaneX * sin(mlx->rotSpeed) + mlx->player->planeY * cos(mlx->rotSpeed);
+		mlx->player->planeX = mlx->player->planeX * cos(mlx->player->rotSpeed) - mlx->player->planeY * sin(mlx->player->rotSpeed);
+		mlx->player->planeY = OldPlaneX * sin(mlx->player->rotSpeed) + mlx->player->planeY * cos(mlx->player->rotSpeed);
 	}
 	if (keycode == 'a')
 	{
 		double OldX = mlx->player->dx;
-		mlx->player->dx = OldX * cos(-mlx->rotSpeed) -
-			mlx->player->dy * sin(-mlx->rotSpeed);
-		mlx->player->dy = OldX * sin(-mlx->rotSpeed) + mlx->player->dy * cos(-mlx->rotSpeed);
+		mlx->player->dx = OldX * cos(-mlx->player->rotSpeed) -
+			mlx->player->dy * sin(-mlx->player->rotSpeed);
+		mlx->player->dy = OldX * sin(-mlx->player->rotSpeed) + mlx->player->dy * cos(-mlx->player->rotSpeed);
 		double OldPlaneX = mlx->player->planeX;
-		mlx->player->planeX = OldPlaneX * cos(-mlx->rotSpeed) - mlx->player->planeY * sin(-mlx->rotSpeed);
-		mlx->player->planeY = OldPlaneX * sin(-mlx->rotSpeed) + mlx->player->planeY * cos(-mlx->rotSpeed);
+		mlx->player->planeX = OldPlaneX * cos(-mlx->player->rotSpeed) - mlx->player->planeY * sin(-mlx->player->rotSpeed);
+		mlx->player->planeY = OldPlaneX * sin(-mlx->player->rotSpeed) + mlx->player->planeY * cos(-mlx->player->rotSpeed);
 
 	}
 	if (keycode == 65505)
-			mlx->Mspeed = 0.3;
+			mlx->player->Mspeed = 0.3;
 //	else
 //		printf("keycode = %d\n", keycode);
 	ft_doall(mlx, mlx->player);
@@ -351,7 +354,7 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 int	ft_release_hooks(int keycode, t_mlx *mlx)
 {
 	if (keycode == 65505)
-			mlx->Mspeed = 0.1;
+			mlx->player->Mspeed = 0.1;
 	return (1);
 }
 
@@ -362,47 +365,47 @@ int main(int argc, char **argv)
 
 	t_mlx		mlx;
 	t_player	player = 
-	{ 0, 0, 0, 0, 0, 0,
+	{ 0, 0, 0, 0, 0, 0, 0, 0,
 		{
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,1,1,1,1,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,1,0,0,0,1},
-			{1,0,1,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,1,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,1,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,1,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,1,1,0,1,2,2,2,2,2,1,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,1,1,1,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-		}};
+			{4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,7,7,7,7,7,7,7,7},
+			{4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
+			{4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
+			{4,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
+			{4,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
+			{4,0,4,0,0,0,0,5,5,5,5,5,5,5,5,5,7,7,0,7,7,7,7,7},
+			{4,0,5,0,0,0,0,5,0,5,0,5,0,5,0,5,7,0,0,0,7,7,7,1},
+			{4,0,6,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
+			{4,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,1},
+			{4,0,8,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
+			{4,0,0,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,7,7,7,1},
+			{4,0,0,0,0,0,0,5,5,5,5,0,5,5,5,5,7,7,7,7,7,7,7,1},
+			{6,6,6,6,6,6,6,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
+			{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
+			{6,6,6,6,6,6,0,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
+			{4,4,4,4,4,4,0,4,4,4,6,0,6,2,2,2,2,2,2,2,3,3,3,3},
+			{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+			{4,0,0,0,0,0,0,0,0,0,0,0,6,2,0,0,5,0,0,2,0,0,0,2},
+			{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
+			{4,0,6,0,6,0,0,0,0,4,6,0,0,0,0,0,5,0,0,0,0,0,0,2},
+			{4,0,0,5,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
+			{4,0,6,0,6,0,0,0,0,4,6,0,6,2,0,0,5,0,0,2,0,0,0,2},
+			{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+			{4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
+		}
+	};
 
-
-	player.x = 16;
-	player.y = 8;
+	player.x = 6;
+	player.y = 3;
 	player.dx = -1;
 	player.dy = 0;
 	player.planeX = 0;
 	player.planeY = 0.70;
+	player.Mspeed = 0.1;
+	player.rotSpeed = 0.05;
 
 	mlx.mlx = mlx_init();
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "cub3d");
 	mlx.player = &player;
-	mlx.Mspeed = 0.1;
-	mlx.rotSpeed = 0.05;
 
 
 	ft_doall(&mlx, &player);
