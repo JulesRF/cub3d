@@ -25,13 +25,12 @@
 
 # define W_MAP	24
 # define H_MAP	24
-
 # define HEIGHT_TOP	HEIGHT / 2
 
 # define TILE_W			WIDTH / W_MAP
 # define TILE_H			HEIGHT_TOP / H_MAP
 # define PLAYER_SIZE	TILE_W / 4
-# define OUTLINE		0
+# define OUTLINE		1
 
 typedef struct s_image
 {
@@ -40,6 +39,8 @@ typedef struct s_image
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
+	int		tw;
+	int		th;
 }	t_image;
 
 typedef struct s_player

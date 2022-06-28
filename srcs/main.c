@@ -190,6 +190,32 @@ void	ft_draw_map(t_mlx *mlx)
 	}
 }
 
+char	*ft_filename(int i)
+{
+	if (i == 1 || i == 3 || i == 4 || i == 7)
+		return ("textures/wood.xpm");
+	if (i == 2 || i == 5 || i == 6 || i == 0)
+		return ("textures/redbrick.xpm");
+	else
+		return ("textures/pillar.xpm");
+}
+void	ft_open_textures(t_image *textures, t_mlx *mlx)
+{
+	int		i;
+	t_image	texture;
+
+	i = 0;
+
+	while (i < 8)
+	{
+		texture.img = mlx_xpm_file_to_image(mlx->mlx, ft_filename(i), &texture.tw, &texture.th);
+		texture.addr = mlx_get_data_addr(texture.img, &texture.bits_per_pixel,
+				&texture.line_length, &texture.endian);
+		textures[i] = texture;
+		i++;
+	}
+}
+
 void	ft_doall(t_mlx *mlx, t_player *player)
 {
 	t_image	img;
@@ -202,7 +228,11 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 
 	ft_draw_map(mlx);
 	ft_draw_minimap(mlx, W_MAP, H_MAP);
-	for (int x = 0; x < WIDTH ; x++)
+
+	t_image	textures[8];
+
+	ft_open_textures(textures, mlx);
+		for (int x = 0; x < WIDTH ; x++)
 	{
 		double camX = -(2 * x / (double)WIDTH - 1);
 		double rX = player->dx + player->planeX * camX;
@@ -278,6 +308,19 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 			(mlx->player->y * TILE_H + HEIGHT_TOP + PLAYER_SIZE / 2),
 			wallX * TILE_W , wallY * TILE_H + HEIGHT_TOP, mlx->img, 0x00FF0000);
 
+		char	*dst;
+		int	color;
+		int	texN;
+		texN = mlx->player->map[(int)wallY][(int)wallX];
+		printf("texN = %d\n", texN);
+		if (texN > 0)
+			texN--;
+		t_image	texture;
+
+		texture = textures[texN];
+		dst = texture.addr + (int)((floorf(x) / texture.tw * texture.line_length + wallX / texture.th * (texture.bits_per_pixel / 8)));
+		color = *(unsigned int *)dst;
+
 		//SECOND PART : compute pixel from the wall_distance we got
 		int lineHeight = (int)(HEIGHT_TOP / wall_distance);
 
@@ -288,12 +331,6 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		if (drawEnd >= HEIGHT_TOP)
 			drawEnd = HEIGHT_TOP - 1;
 
-		int	color;
-		if (side == 0)
-			color = 0xFF0000;
-		else
-			color = 0x8A0000;
-		(void)color;
 		ft_drawline(x, drawStart, x, drawEnd, mlx->img, color);
 	}		
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img->img, 0, 0);
@@ -359,8 +396,6 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 	}
 	if (keycode == 65505)
 			mlx->player->Mspeed = 0.3;
-	else
-		printf("keycode = %d\n", keycode);
 	ft_doall(mlx, mlx->player);
 	return (1);
 }
@@ -408,7 +443,7 @@ int main(int argc, char **argv)
 		}
 	};
 
-	player.x = 6;
+	player.x = 16;
 	player.y = 3;
 	player.dx = -1;
 	player.dy = 0;
