@@ -192,9 +192,10 @@ void	ft_draw_map(t_mlx *mlx)
 
 char	*ft_filename(int i)
 {
-	if (i == 1 || i == 3 || i == 4 || i == 7)
+	i++;
+	if (i == 1 || i == 3 || i == 7)
 		return ("textures/wood.xpm");
-	if (i == 2 || i == 5 || i == 6 || i == 0)
+	if (i == 2 || i == 4)
 		return ("textures/redbrick.xpm");
 	else
 		return ("textures/pillar.xpm");
@@ -232,7 +233,7 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 	t_image	textures[8];
 
 	ft_open_textures(textures, mlx);
-		for (int x = 0; x < WIDTH ; x++)
+	for (int x = 0; x < WIDTH ; x++)
 	{
 		double camX = -(2 * x / (double)WIDTH - 1);
 		double rX = player->dx + player->planeX * camX;
@@ -252,6 +253,7 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		int	stepY;
 		int hit = 0;
 		int	side;
+		int	texN;
 
 		if (rX < 0)
 		{
@@ -287,7 +289,8 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 				mapy += stepY;
 				side = 1;
 			}
-			if (player->map[mapy][mapx] > 0)
+			texN = player->map[mapy][mapx];
+			if (texN > 0)
 				hit = 1;
 		}
 		if (stepX < 0) 
@@ -299,8 +302,8 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		else
 			wall_distance = sideY - deltaY;
 
-		double wallX; //where exactly the wall was hit
-		double wallY; //where exactly the wall was hit
+		double wallX; 
+		double wallY; 
 		wallY = mlx->player->y + wall_distance * rY;
 		wallX= mlx->player->x + wall_distance * rX;
 
@@ -310,17 +313,16 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 
 		char	*dst;
 		int	color;
-		int	texN;
-		texN = mlx->player->map[(int)wallY][(int)wallX];
+		texN -= 1;
 		printf("texN = %d\n", texN);
 		if (texN > 0)
 			texN--;
 		t_image	texture;
 
+		if (side == 0)
+			wallX = wallY;
+		wallX -= floor(wallX);
 		texture = textures[texN];
-		dst = texture.addr + (int)((floorf(x) / texture.tw * texture.line_length + wallX / texture.th * (texture.bits_per_pixel / 8)));
-		color = *(unsigned int *)dst;
-
 		//SECOND PART : compute pixel from the wall_distance we got
 		int lineHeight = (int)(HEIGHT_TOP / wall_distance);
 
@@ -331,8 +333,34 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		if (drawEnd >= HEIGHT_TOP)
 			drawEnd = HEIGHT_TOP - 1;
 
-		ft_drawline(x, drawStart, x, drawEnd, mlx->img, color);
-	}		
+		float	dx;
+		float	dy;
+		float	len;
+		float	x_l;
+		float	y_l;
+
+		dx = x - x;
+		dy = drawEnd - drawStart;
+		if (fabs(dx) > fabs(dy))
+			len = fabs(dx);
+		else
+			len = fabs(dy);
+		dx = dx / len;
+		dy = dy / len;
+		x_l = x;
+		y_l = drawStart;
+		//A mettre dans une autre fonction. qui prend x0, y0, dx et dy
+		for (int i = 0; i < len ; i++)
+		{	
+			
+			dst = texture.addr + (int)(floor((x_l / texture.tw * texture.line_length) +
+						floor(wallX / texture.th * (texture.bits_per_pixel / 8))));
+			color = *(unsigned int *)dst;
+			my_mlx_pixel_put(mlx->img, (int)(floorf(x_l)), (int)(floorf(y_l)), color);
+			x_l += dx;
+			y_l += dy;
+		}
+	}	
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img->img, 0, 0);
 	mlx_destroy_image(mlx->mlx, mlx->img->img);
 }
@@ -344,7 +372,7 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 		exit(EXIT_SUCCESS);
 		return (0);
 	}
-	
+
 	if (keycode == 'w')
 	{
 		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x + mlx->player->dx * mlx->player->Mspeed)] == 0)
@@ -395,7 +423,7 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 
 	}
 	if (keycode == 65505)
-			mlx->player->Mspeed = 0.3;
+		mlx->player->Mspeed = 0.3;
 	ft_doall(mlx, mlx->player);
 	return (1);
 }
@@ -403,7 +431,7 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 int	ft_release_hooks(int keycode, t_mlx *mlx)
 {
 	if (keycode == 65505)
-			mlx->player->Mspeed = 0.1;
+		mlx->player->Mspeed = 0.1;
 	return (1);
 }
 
@@ -443,8 +471,8 @@ int main(int argc, char **argv)
 		}
 	};
 
-	player.x = 16;
-	player.y = 3;
+	player.x = 6;
+	player.y = 5;
 	player.dx = -1;
 	player.dy = 0;
 	player.planeX = 0;
