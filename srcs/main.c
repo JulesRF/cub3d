@@ -263,68 +263,80 @@ int	ft_checkname(char *str, char *set)
 // 	return (0);
 // }
 
-int	ft_check_closed_line(char **map, int i, int j, int boolean)
+// int	ft_check_closed_line(char **map, int i, int j, int boolean)
+// {
+// 	while (map[i] != 0)
+// 	{
+// 		j = 0;
+// 		while (map[i][j] != '\0')
+// 		{
+// 			if (map[i][j] == '1')
+// 			{
+// 				while (map[i][j] == '1' && map[i][j])
+// 					j++;
+// 				boolean = 0;
+// 			}
+// 			if (map[i][j] == '0')
+// 			{
+// 				while (map[i][j] == '0' && map[i][j])
+// 					j++;
+// 				boolean = 1;
+// 			}
+// 			else
+// 				j++;
+// 		}
+// 		if (boolean == 1)
+// 			return (write(1, "Error\nInvalid map format\n", 25), 1);
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
+int	ft_checkline(char **map, int i, int j)
 {
 	while (map[i] != 0)
 	{
 		j = 0;
-		while (map[i][j] != '\0')
+		while (map[i][j])
 		{
 			if (map[i][j] == '1')
+				j++;
+			else if (map[i][j] == '0')
 			{
-				while (map[i][j] == '1' && map[i][j])
+				if (j >= 1 && map[i][j] == ' ')
+					return (write(1, "Error\nInvalid map format\n", 25), 1);
+				while (map[i][j] && map[i][j] == '0')
 					j++;
-				boolean = 0;
-			}
-			if (map[i][j] == '0')
-			{
-				while (map[i][j] == '0' && map[i][j])
-					j++;
-				boolean = 1;
+				if (!map[i][j])
+					return (write(1, "Error\nInvalid map format\n", 25), 1);
 			}
 			else
 				j++;
 		}
-		if (boolean == 1)
-			return (write(1, "Error\nInvalid map format\n", 25), 1);
 		i++;
 	}
 	return (0);
 }
 
-int	ft_check_closed_column(char **map, int i, int j, int boolean)
+int	ft_checkcolumn(char **map, int i, int j)
 {
-	int	zero;
-
 	while (map[0][j] != '\0')
 	{
-		zero = 0;
 		i = 0;
 		while (map[i] != 0)
 		{
 			if (map[i] != 0 && map[i][j] == '1')
-			{
-				boolean = !boolean;
-				while (map[i] != 0 && map[i][j] == '1')
-				{
-					i++;
-					printf("la y'a un 1\n");
-				}
-			}
-			if (map[i] != 0 && map[i][j] == '0')
+				i++;
+			else if (map[i] != 0 && map[i][j] == '0')
 			{
 				while (map[i] != 0 && map[i][j] == '0')
-				{
 					i++;
-					zero++;
-				}
+				if (map[i] == 0)
+					return (write(1, "Error\nInvalid map format\n", 25), 1);
 			}
-			else if (map[i])
+			else
 				i++;
 		}
-		printf("line number: %d, boolean = %d\n", j, boolean);
-		if (!boolean && zero != 0)
-			return (write(1, "Error\nInvalid map format\n", 25), 1);
 		j++;
 	}
 	return (0);
@@ -335,9 +347,11 @@ int	ft_check_closed(char *map_path, int i, int j)
 	char	**map;
 
 	map = ft_alloc_map(map_path);
-	// if (ft_check_closed_line(map, i, j, 0))
-	// 	return (1);
-	if (ft_check_closed_column(map, i, j, 0))
+	if (!map)
+		return (1);
+	if (ft_checkline(map, i, j))
+		return (1);
+	if (ft_checkcolumn(map, i, j))
 		return (1);
 	return (0);
 }
@@ -366,21 +380,21 @@ int	ft_checkmap(char *map_path)
 
 int main(int argc, char **argv)
 {
-    t_data     *img;
-	int	i;
-	
+    t_data	*img;
+	int		i;
+
 	i = 0;
-	
-    if (argc != 2)
+
+	if (argc != 2)
 		return (printf("Error\nInvalid arguments number\n"), 1);
-    
+
 	img = malloc(sizeof(t_data));
-	
+
 	if (ft_checkmap(argv[1]))
 		printf("MAUVAISE MAP\n");
 
-    ft_init_mstruct(img, argv[1]);
-	
+	ft_init_mstruct(img, argv[1]);
+
 	printf ("line_size = %d\n", img->line_size);
 	printf ("column_size = %d\n", img->column_size);
 	ft_init_mlxwinimg(img);
