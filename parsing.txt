@@ -1,0 +1,23 @@
+J aimerais :
+
+	->char ** qui contient la map CARREE ( donc remplir les 'vides' par des espaces)
+	->WIDTH de la fenetre (en pixels)
+	->Height de la fenetre (en pixels)
+
+
+	->WIDTH de la MAP (en nombre de cases)
+	->HEIGHT de la MAP (en cases)
+	
+	->x et y de depart du joueur, en cases de la map (genre map[2][5]), 
+		dans 2 var x = 5, y = 2; map[y][x]
+	
+	->Floor color in HEXA in an int
+		same for ceiling
+
+	->a char ** named textures
+		textures[0] = path to NORTH texture
+		textures[1] = path to SOUTH
+			[...]
+
+
+Merci beaucoup monsieur
