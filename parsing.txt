@@ -1,12 +1,12 @@
 J aimerais :
 
-	->char ** qui contient la map CARREE ( donc remplir les 'vides' par des espaces)
+	->char ** qui contient la map CARREE ( donc remplir les 'vides' par des espaces) OK
 	->WIDTH de la fenetre (en pixels)
 	->Height de la fenetre (en pixels)
 
 
-	->WIDTH de la MAP (en nombre de cases)
-	->HEIGHT de la MAP (en cases)
+	->WIDTH de la MAP (en nombre de cases) OK
+	->HEIGHT de la MAP (en cases)		   OK
 	
 	->x et y de depart du joueur, en cases de la map (genre map[2][5]), 
 		dans 2 var x = 5, y = 2; map[y][x]

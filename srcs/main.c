@@ -92,14 +92,22 @@ char	**ft_init(int line)
 	if (!init)
 		return (write(1, "Error\nmalloc fail", 17), NULL);
 	init[0] = 0;
+	// while (i < line)
+	// {
+	// 	init[i] = malloc(sizeof(char) * (large + 1));
+	// 	init[i][0] = '\0';
+	// 	i++;
+	// }
 	return (init);
 }
 
-int	ft_file_line(int fd)
+int	ft_file_line(char *map_path)
 {
 	int		line;
 	char	*dest;
+	int		fd;
 
+	fd = open(map_path, O_RDONLY);
 	line = 0;
 	while (dest != NULL || line == 0)
 	{
@@ -109,32 +117,68 @@ int	ft_file_line(int fd)
 		free (dest);
 		line++;
 	}
-	return (line);
+	return (close (fd), line);
 }
 
-char	**ft_alloc_map(char *map_path)
+int	ft_longuestline(char *map_path, int i)
+{
+	int		max;
+	int		fd;
+	char	*dest;
+
+	max = 0;
+	fd = open(map_path, O_RDONLY);
+	while (dest != NULL || max == 0)
+	{
+		dest = get_next_line(fd);
+		if (!dest)
+			break ;
+		if (ft_specialstrlen(dest) > max)
+			max = ft_strlen(dest);
+		free (dest);
+		i++;
+	}
+	return (close (fd), max);
+}
+
+char	*ft_alloc_line(char *dest, char *temp, int large, int j)
+{
+	dest = malloc(sizeof(char) * (large + 1));
+	if (!dest)
+		return (NULL);
+	while (j < large)
+	{
+		if (j >= ft_specialstrlen(temp))
+			dest[j] = ' ';
+		else
+			dest[j] = temp[j];
+		j++;
+	}
+	dest[j - 1] = '\0';
+	free (temp);
+	return (dest);
+}
+
+char	**ft_alloc_map(char *map_path, int i, int j, int large)
 {
 	char	**dest;
 	char	*temp;
 	int		fd;
-	int		i;
 	int		line;
 
-	fd = open(map_path, O_RDONLY);
-	line = ft_file_line(fd);
+	line = ft_file_line(map_path);
+	large = ft_longuestline(map_path, 0);
 	dest = ft_init(line);
 	if (!dest)
 		return (NULL);
-	close (fd);
 	fd = open(map_path, O_RDONLY);
-	i = 0;
 	while (i < line)
 	{
+		j = 0;
 		temp = get_next_line(fd);
-		if (ft_ischar(temp, '\n'))
-			temp[ft_specialstrlen(temp)] = '\0';
-		dest[i] = ft_strdup(temp);
-		free (temp);
+		dest[i] = ft_alloc_line(dest[i], temp, large, j);
+		if (!dest[i])
+			return (NULL);
 		i++;
 	}
 	dest[i] = 0;
@@ -152,11 +196,14 @@ void	ft_init_mlxwinimg(t_data *data)
 			&data->line_length, &data->endian);
 }
 
-void	ft_init_mstruct(t_data *data, char *arg)
+int	ft_init_mstruct(t_data *data, char *arg)
 {
-    data->map = ft_alloc_map(arg);
+    data->map = ft_alloc_map(arg, 0, 0, -5);
+	if (!data->map)
+		return (1);
     data->line_size = ft_largest(data->map);
 	data->column_size = ft_longuest(data->map);
+	return (0);
 }
 
 void	ft_draw_square(t_data *data, int x, int y, int color)
@@ -240,58 +287,6 @@ int	ft_checkname(char *str, char *set)
 	return (0);
 }
 
-// int	ft_checkchar2(char *dest, int fd)
-// {
-// 	int	count[3];
-// 	int	i;
-
-// 	ft_memset(count, 0, 3);
-// 	i = 1;
-// 	while (dest != NULL || i == 1)
-// 	{
-// 		dest = get_next_line(fd);
-// 		if (dest == NULL && i > 1)
-// 			break ;
-// 		count[0] = count[0] + ft_ischar(dest, 'C');
-// 		count[1] = count[1] + ft_ischar(dest, 'P');
-// 		count[2] = count[2] + ft_ischar(dest, 'E');
-// 		free (dest);
-// 		i++;
-// 	}
-// 	if (count[0] == 0 || count[1] != 1 || count[2] != 1)
-// 		return (write(1, "Error\nInvalid map form. 4\n", 26), 1);
-// 	return (0);
-// }
-
-// int	ft_check_closed_line(char **map, int i, int j, int boolean)
-// {
-// 	while (map[i] != 0)
-// 	{
-// 		j = 0;
-// 		while (map[i][j] != '\0')
-// 		{
-// 			if (map[i][j] == '1')
-// 			{
-// 				while (map[i][j] == '1' && map[i][j])
-// 					j++;
-// 				boolean = 0;
-// 			}
-// 			if (map[i][j] == '0')
-// 			{
-// 				while (map[i][j] == '0' && map[i][j])
-// 					j++;
-// 				boolean = 1;
-// 			}
-// 			else
-// 				j++;
-// 		}
-// 		if (boolean == 1)
-// 			return (write(1, "Error\nInvalid map format\n", 25), 1);
-// 		i++;
-// 	}
-// 	return (0);
-// }
-
 int	ft_checkline(char **map, int i, int j)
 {
 	while (map[i] != 0)
@@ -307,7 +302,7 @@ int	ft_checkline(char **map, int i, int j)
 					return (write(1, "Error\nInvalid map format\n", 25), 1);
 				while (map[i][j] && map[i][j] == '0')
 					j++;
-				if (!map[i][j])
+				if (!map[i][j] && map[i][j] == ' ')
 					return (write(1, "Error\nInvalid map format\n", 25), 1);
 			}
 			else
@@ -342,11 +337,16 @@ int	ft_checkcolumn(char **map, int i, int j)
 	return (0);
 }
 
+// void	ft_cleanmap(char **map)
+// {
+	
+// }
+
 int	ft_check_closed(char *map_path, int i, int j)
 {
 	char	**map;
 
-	map = ft_alloc_map(map_path);
+	map = ft_alloc_map(map_path, 0, 0, -5);
 	if (!map)
 		return (1);
 	if (ft_checkline(map, i, j))
@@ -358,21 +358,13 @@ int	ft_check_closed(char *map_path, int i, int j)
 
 int	ft_checkmap(char *map_path)
 {
-	// int		line;
 	int		fd;
-	// char	*dest;
 
-	// dest = NULL;
 	if (ft_checkname(map_path, ".cub"))
 		return (1);
-	// fd = open(map_path, O_RDONLY);
-	// if (fd == -1)
-	// 	return (write(1, "Error\nfailed to open map\n", 25), 1);
 	fd = open(map_path, O_RDONLY);
 	if (fd == -1)
 		return (write(1, "Error\nfailed to open map\n", 25), 1);
-	// if (ft_checkchar(map_path, dest, line, fd))
-		// return (1);
 	if (ft_check_closed(map_path, 0, 0))
 		return (1);
 	return (0);
@@ -382,6 +374,7 @@ int main(int argc, char **argv)
 {
     t_data	*img;
 	int		i;
+	int		j;
 
 	i = 0;
 
@@ -393,7 +386,8 @@ int main(int argc, char **argv)
 	if (ft_checkmap(argv[1]))
 		printf("MAUVAISE MAP\n");
 
-	ft_init_mstruct(img, argv[1]);
+	if (ft_init_mstruct(img, argv[1]))
+		return (printf("Error\nBad allocation\n"), 1);
 
 	printf ("line_size = %d\n", img->line_size);
 	printf ("column_size = %d\n", img->column_size);
@@ -401,7 +395,14 @@ int main(int argc, char **argv)
 
 	while (img->map[i] != 0)
 	{
-		printf("%s\n", img->map[i]);
+		j = 0 ;
+		while (img->map[i][j] != '\0')
+		{
+			// printf("%d ", img->map[i][j]);
+			j++;
+		}
+		printf("%s\\0", img->map[i]);
+		printf("\n");
 		i++;
 	}
 
