@@ -92,12 +92,6 @@ char	**ft_init(int line)
 	if (!init)
 		return (write(1, "Error\nmalloc fail", 17), NULL);
 	init[0] = 0;
-	// while (i < line)
-	// {
-	// 	init[i] = malloc(sizeof(char) * (large + 1));
-	// 	init[i][0] = '\0';
-	// 	i++;
-	// }
 	return (init);
 }
 
@@ -298,12 +292,12 @@ int	ft_checkline(char **map, int i, int j)
 				j++;
 			else if (map[i][j] == '0')
 			{
-				if (j >= 1 && map[i][j] == ' ')
-					return (write(1, "Error\nInvalid map format\n", 25), 1);
+				if ((j == 0) || (j >= 1 && map[i][j - 1] != '1'))
+					return (printf("Error\nInvalid map format i = %d j = %d\n", i, j), 1);
 				while (map[i][j] && map[i][j] == '0')
 					j++;
-				if (!map[i][j] && map[i][j] == ' ')
-					return (write(1, "Error\nInvalid map format\n", 25), 1);
+				if (!map[i][j] || map[i][j] != '1')
+					return (printf("Error\nInvalid map format i = %d j = %d\n", i, j), 1);
 			}
 			else
 				j++;
@@ -324,15 +318,38 @@ int	ft_checkcolumn(char **map, int i, int j)
 				i++;
 			else if (map[i] != 0 && map[i][j] == '0')
 			{
+				if ((i == 0) || (i >= 1 && map[i - 1][j] != '1'))
+					return (printf("Error\nInvalid map format i = %d j = %d\n", i, j), 1);
 				while (map[i] != 0 && map[i][j] == '0')
 					i++;
-				if (map[i] == 0)
-					return (write(1, "Error\nInvalid map format\n", 25), 1);
+				if (map[i] == 0 || map[i][j] != '1')
+					return (printf("Error\nInvalid map format i = %d j = %d\n", i, j), 1);
 			}
 			else
 				i++;
 		}
 		j++;
+	}
+	return (0);
+}
+
+int	ft_checkplayer(char **map, int i, int j)
+{
+	while (map[i] != 0)
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (map[i][j] == 'S' || map[i][j] == 'N' || map[i][j] == 'W'
+				|| map[i][j] == 'E')
+			{
+				if (i == 0 || j == 0 || !map[i + 1] || map[i][j + 1] == '\0'
+					|| map[i + 1][j] == ' ' || map[i][j + 1] == ' ')
+					return (printf("Error\nPlayer is badly placed\n"), 1);
+			}
+			j++;
+		}
+		i++;
 	}
 	return (0);
 }
@@ -352,6 +369,8 @@ int	ft_check_closed(char *map_path, int i, int j)
 	if (ft_checkline(map, i, j))
 		return (1);
 	if (ft_checkcolumn(map, i, j))
+		return (1);
+	if (ft_checkplayer(map, i, j))
 		return (1);
 	return (0);
 }
