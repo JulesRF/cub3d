@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/06/27 11:49:37 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/07/22 17:58:10 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,39 @@ void	my_mlx_pixel_put(t_image *data, int x, int y, int color)
 
 
 /* DDA ALGORIHM */
+
+
+void	ft_drawray(int x0, int y0, int x1, int y1, void *img, int color)
+{
+	float	dx;
+	float	dy;
+	float	len;
+	float	x;
+	float	y;
+	int		stop;
+
+	stop = 0;
+	dx = x1 - x0;
+	dy = y1 - y0;
+	if (fabs(dx) > fabs(dy))
+		len = fabs(dx);
+	else
+		len = fabs(dy);
+	dx = dx / len;
+	dy = dy / len;
+	x = x0;
+	y = y0;
+	//A mettre dans une autre fonction. qui prend x0, y0, dx et dy
+	for (int i = 0; i < len ; i++)
+	{	
+		my_mlx_pixel_put(img, (int)(floorf(x)), (int)(floorf(y)), color);
+		x += dx;
+		y += dy;
+		if (stop > 45)
+			break ;
+		stop++;
+	}
+} 
 
 void	ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
 {
@@ -193,9 +226,11 @@ void	ft_draw_map(t_mlx *mlx)
 char	*ft_filename(int i)
 {
 	i++;
-	if (i == 1 || i == 3 || i == 7)
+	if (i == 3 || i == 7)
 		return ("textures/wood.xpm");
-	if (i == 2 || i == 4)
+	if (i == 2)
+		return ("textures/eagle.xpm");
+	if (i == 1 | i == 4)
 		return ("textures/redbrick.xpm");
 	else
 		return ("textures/pillar.xpm");
@@ -233,6 +268,7 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 	t_image	textures[8];
 
 	ft_open_textures(textures, mlx);
+	int	fov = 0;
 	for (int x = 0; x < WIDTH ; x++)
 	{
 		double camX = -(2 * x / (double)WIDTH - 1);
@@ -306,24 +342,16 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		double wallY; 
 		wallY = mlx->player->y + wall_distance * rY;
 		wallX= mlx->player->x + wall_distance * rX;
+		if (fov > WIDTH / 2 && fov < WIDTH / 2 + 120)
+		{
+			ft_drawray((mlx->player->x * TILE_W + PLAYER_SIZE / 2),
+				(mlx->player->y * TILE_H + HEIGHT_TOP + PLAYER_SIZE / 2),
+				wallX * TILE_W , wallY * TILE_H + HEIGHT_TOP, mlx->img, 0x00FF0000);
+		}
+		fov++;
 
-		ft_drawline((mlx->player->x * TILE_W + PLAYER_SIZE / 2),
-			(mlx->player->y * TILE_H + HEIGHT_TOP + PLAYER_SIZE / 2),
-			wallX * TILE_W , wallY * TILE_H + HEIGHT_TOP, mlx->img, 0x00FF0000);
-
-		char	*dst;
-		int	color;
-		texN -= 1;
-		printf("texN = %d\n", texN);
-		if (texN > 0)
-			texN--;
-		t_image	texture;
-
-		if (side == 0)
-			wallX = wallY;
-		wallX -= floor(wallX);
-		texture = textures[texN];
 		//SECOND PART : compute pixel from the wall_distance we got
+
 		int lineHeight = (int)(HEIGHT_TOP / wall_distance);
 
 		int drawStart = -lineHeight / 2 + HEIGHT_TOP / 2;
@@ -333,32 +361,33 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		if (drawEnd >= HEIGHT_TOP)
 			drawEnd = HEIGHT_TOP - 1;
 
-		float	dx;
-		float	dy;
-		float	len;
-		float	x_l;
-		float	y_l;
+		char			*dst;
+		unsigned int	color;
+		texN -= 1;
+		t_image	texture;
 
-		dx = x - x;
-		dy = drawEnd - drawStart;
-		if (fabs(dx) > fabs(dy))
-			len = fabs(dx);
-		else
-			len = fabs(dy);
-		dx = dx / len;
-		dy = dy / len;
-		x_l = x;
-		y_l = drawStart;
-		//A mettre dans une autre fonction. qui prend x0, y0, dx et dy
-		for (int i = 0; i < len ; i++)
-		{	
+		printf("deltaX=%f ; deltaY = %f\n", deltaX, deltaY);
+		texture = textures[texN];
+		if (side == 0)
+			wallX = wallY;
+		wallX -= floor(wallX);
+		int texX = (int)((wallX * (double)texture.tw));
+    	if(side == 0 && rX > 0) texX = texture.tw - texX - 1;
+      	if(side == 1 && rY < 0) texX = texture.tw - texX - 1;
+
 			
-			dst = texture.addr + (int)(floor((x_l / texture.tw * texture.line_length) +
-						floor(wallX / texture.th * (texture.bits_per_pixel / 8))));
+		double step = 1.0 * texture.th / lineHeight;
+      // Starting texture coordinate
+		double texPos = (drawStart - HEIGHT_TOP / 2 + lineHeight / 2) * step;
+		for(int y = drawStart; y< drawEnd; y++)
+		{
+        	int texY = (int)texPos & (texture.th - 1);
+			texPos += step;
+			dst = texture.addr + (texY * texture.line_length
+				+ texX * (texture.bits_per_pixel / 8));
 			color = *(unsigned int *)dst;
-			my_mlx_pixel_put(mlx->img, (int)(floorf(x_l)), (int)(floorf(y_l)), color);
-			x_l += dx;
-			y_l += dy;
+			if(side == 1) color = (color >> 1) & 8355711;
+			my_mlx_pixel_put(mlx->img, x, y, color);
 		}
 	}	
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img->img, 0, 0);
