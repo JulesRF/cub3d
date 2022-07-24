@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/07/22 17:58:10 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/07/24 19:16:55 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,7 +230,7 @@ char	*ft_filename(int i)
 		return ("textures/wood.xpm");
 	if (i == 2)
 		return ("textures/eagle.xpm");
-	if (i == 1 | i == 4)
+	if (i == 1 || i == 4)
 		return ("textures/redbrick.xpm");
 	else
 		return ("textures/pillar.xpm");
