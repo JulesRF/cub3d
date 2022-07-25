@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/07/22 17:50:23 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/07/25 14:29:35 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 # include <sys/time.h>
 # include <math.h>
 
-# define WIDTH	1200
-# define HEIGHT	1200
+# define WIDTH	800
+# define HEIGHT	800
 
 # define W_MAP	24
 # define H_MAP	24
@@ -31,6 +31,11 @@
 # define TILE_H			HEIGHT_TOP / H_MAP
 # define PLAYER_SIZE	TILE_W / 4
 # define OUTLINE		1
+
+# define NORTH	0
+# define SOUTH	1
+# define EAST	2
+# define WEST	3
 
 typedef struct s_image
 {
