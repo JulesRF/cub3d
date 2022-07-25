@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/07/25 14:39:11 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/07/25 14:41:11 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -366,6 +366,7 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		t_image	texture;
 
 		if (side == 1)
+		{
 			if (rY < 0)
 				texN = SOUTH;
 			else
