@@ -14,17 +14,17 @@
 
 char	*get_next_line(int fd)
 {
-	char		buffer[16 + 1];
+	char		buffer[1 + 1];
 	char		*line;
 	static char	*save = NULL;
 	int			ret;
 
 	ret = 1;
-	if (fd < 0 || 16 <= 0)
+	if (fd < 0 || 1 <= 0)
 		return (NULL);
 	while (!ft_is_next_line(save, '\n') && ret > 0)
 	{
-		ret = read(fd, buffer, 16);
+		ret = read(fd, buffer, 1);
 		if (ret <= 0)
 			break ;
 		buffer[ret] = '\0';
