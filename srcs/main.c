@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/07/25 14:41:11 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/07/26 23:49:31 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,8 +192,9 @@ void	ft_draw_map(t_mlx *mlx)
 char	*ft_filename(int i)
 {
 	i++;
+	return ("textures/emma.xpm");
 	if (i == SOUTH)
-		return ("textures/wood.xpm");
+		return ("textures/emma.xpm");
 	if (i == EAST)
 		return ("textures/eagle.xpm");
 	if (i == WEST)
