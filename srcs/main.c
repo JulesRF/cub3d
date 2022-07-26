@@ -52,6 +52,22 @@ void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
+int	ft_skipspace(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+	{
+		if (str[i] != ' ')
+			return (i);
+		i++;
+	}
+	return (0);
+}
+
 int ft_largest(char **map)
 {
 	int	i;
@@ -369,18 +385,20 @@ void	ft_cleanmap(char **map)
 
 int	ft_checkobj(char *str, int obj)
 {
-	if (str[0] == 'N' && str[1] == 'O' && obj == 0)
-		return (0);
-	else if (str[0] == 'S' && str[1] == 'O' && obj == 1)
-		return (0);
-	else if (str[0] == 'W' && str[1] == 'E' && obj == 2)
-		return (0);
-	else if (str[0] == 'E' && str[1] == 'A' && obj == 3)
-		return (0);
-	else if (str[0] == 'F' && obj == 4)
-		return (0);
-	else if (str[0] == 'C' && obj == 5)
-		return (0);
+	static int	tab[6] = {0, 0, 0, 0, 0, 0};
+
+	if (str[0] == 'N' && str[1] == 'O' && tab[obj] == 0)
+		return (tab[obj]++, 0);
+	else if (str[0] == 'S' && str[1] == 'O' && tab[obj] == 0)
+		return (tab[obj]++, 0);
+	else if (str[0] == 'W' && str[1] == 'E' && tab[obj] == 0)
+		return (tab[obj]++, 0);
+	else if (str[0] == 'E' && str[1] == 'A' && tab[obj] == 0)
+		return (tab[obj]++, 0);
+	else if (str[0] == 'F' && tab[obj] == 0)
+		return (tab[obj]++, 0);
+	else if (str[0] == 'C' && tab[obj] == 0)
+		return (tab[obj]++, 0);
 	return (1);
 }
 
@@ -505,7 +523,7 @@ int	ft_digitonly(char *str)
 	{
 		if (str[i] < '0' || str[i] > '9')
 		{
-			if (str[i] != ',')
+			if (str[i] != ',' && str[i] != ' ')
 				return (1);
 		}
 		i++;
@@ -513,19 +531,26 @@ int	ft_digitonly(char *str)
 	return (0);
 }
 
-int	ft_checkinf(char **inf)
+int	ft_checkinf(char **inf, int i)
 {
-	int i;
+	int wich;
 
-	i = 0;
-	while (inf[i] != 0 && inf[i][0] != 'F')
+	wich = 0;
+	while (inf[i] != 0 && (inf[i][ft_skipspace(inf[i])] != 'F'
+		|| inf[i][ft_skipspace(inf[i])] != 'C'))
 		i++;
-	if (ft_digitonly(inf[i] + 2))
-		return (1);
-	while (inf[i] != 0 && inf[i][0] != 'C')
+	if (inf[i] == 0)
+		return (printf("logique je peux pas vous decevoir\n"), 1);
+	if (inf[i][ft_skipspace(inf[i])] && inf[i][ft_skipspace(inf[i])] == 'C')
+		wich++;
+	if (inf[i] != 0 && ft_digitonly(inf[i] + ft_skipspace(inf[i]) + 1))
+		return (printf("ca pose des bangers vers meuda\n"), 1);
+	while (inf[i] != 0 && (inf[i][ft_skipspace(inf[i])] != 'C' || wich == 0))
 		i++;
-	if (ft_digitonly(inf[i] + 2))
-		return (1);
+	if (inf[i] == 0)
+		return (printf("le passe c'est le passe\n"), 1);
+	if (inf[i] != 0 && ft_digitonly(inf[i] + ft_skipspace(inf[i]) + 1))
+		return (printf("jsuis dans paname\n"), 1);
 	return (0);
 }
 
@@ -559,7 +584,7 @@ int	ft_checkmap(char *map_path)
 		printf("Ligne numero %i = %s\\0\n", i + 1, map[i]);
 		i++;
 	}
-	if (ft_checkclosed(map, 0, 0) || ft_checkinf(inf))
+	if (ft_checkclosed(map, 0, 0) || ft_checkinf(inf, 0))
 		return (ft_cleanmap(inf), ft_cleanmap(map), 1);
 	return (0);
 }
