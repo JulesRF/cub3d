@@ -24,41 +24,7 @@ void	my_mlx_pixel_put(t_image *data, int x, int y, int color)
 
 
 /* DDA ALGORIHM */
-
-
-void	ft_drawray(int x0, int y0, int x1, int y1, void *img, int color)
-{
-	float	dx;
-	float	dy;
-	float	len;
-	float	x;
-	float	y;
-	int		stop;
-
-	stop = 0;
-	dx = x1 - x0;
-	dy = y1 - y0;
-	if (fabs(dx) > fabs(dy))
-		len = fabs(dx);
-	else
-		len = fabs(dy);
-	dx = dx / len;
-	dy = dy / len;
-	x = x0;
-	y = y0;
-	//A mettre dans une autre fonction. qui prend x0, y0, dx et dy
-	for (int i = 0; i < len ; i++)
-	{	
-		my_mlx_pixel_put(img, (int)(floorf(x)), (int)(floorf(y)), color);
-		x += dx;
-		y += dy;
-		if (stop > 45)
-			break ;
-		stop++;
-	}
-} 
-
-void	ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
+/*void	ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
 {
 	float	dx;
 	float	dy;
@@ -83,10 +49,9 @@ void	ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
 		x += dx;
 		y += dy;
 	}
-} 
+} */
 
 //BRESENHAM
-/*
 void ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
 {
 	int dx =  abs (x1 - x0), sx = x0 < x1 ? 1 : -1;
@@ -100,7 +65,7 @@ void ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
 		if (e2 >= dy) { err += dy; x0 += sx; } // e_xy+e_x > 0 
 		if (e2 <= dx) { err += dx; y0 += sy; } // e_xy+e_y < 0 
 	}
-}*/
+}
 
 void	ft_draw_small_square(t_mlx *mlx, int x, int y, int color)
 {
@@ -150,9 +115,9 @@ void	ft_draw_square(t_mlx *mlx, int x, int y, int color)
 		j = 0;
 		while (x + j < x + (TILE_W))
 		{
-			my_mlx_pixel_put(mlx->img, x + j, y + i, color);
+			my_mlx_pixel_put(mlx->minimap, x + j, y + i, color);
 			if (i >= TILE_H - OUTLINE || j >= TILE_W - OUTLINE)
-				my_mlx_pixel_put(mlx->img, x + j, y + i, 0x000000);
+				my_mlx_pixel_put(mlx->minimap, x + j, y + i, 0x000000);
 			j++;
 		}
 		i++;
@@ -166,14 +131,13 @@ void	ft_draw_player(t_mlx *mlx, float x, float y)
 
 	x = x * TILE_W;
 	y = y * TILE_H;
-	y = y + HEIGHT_TOP;
 	i = 0;
 	while (y + i < y + (PLAYER_SIZE))
 	{
 		j = 0;
 		while (x + j < x + (PLAYER_SIZE))
 		{
-			my_mlx_pixel_put(mlx->img, floorf(x) + j, floorf(y) + i, 0x0FFFF00);
+			my_mlx_pixel_put(mlx->minimap, floorf(x) + j, floorf(y) + i, 0x0FFFF00);
 			j++;
 		}
 		i++;
@@ -185,19 +149,21 @@ void	ft_draw_minimap(t_mlx *mlx, int w, int h)
 	int		x;
 	int		y;
 	int		i;
+	int		j;
 
-	y = HEIGHT_TOP;
+	y = 0;
+	x = 0;
 	i = 0;
 	while (i < h)
 	{
-		x = 0;
-		while (x < w)
+		j = 0;
+		while (j < w)
 		{
-			if (mlx->player->map[i][x] > 0)
-				ft_draw_square(mlx, x * TILE_W, i * TILE_H + y, 0x606060);
-			if (mlx->player->map[i][x] == 0)
-				ft_draw_square(mlx, x * TILE_W , i * TILE_H + y, 0xC0C0C0);
-			x++;
+			if (mlx->player->map[i][j] == 1)
+				ft_draw_square(mlx, j * TILE_W + x, i * TILE_H + y, 0x606060);
+			if (mlx->player->map[i][j] == 0)
+				ft_draw_square(mlx, j * TILE_W + x, i * TILE_H + y, 0xC0C0C0);
+			j++;
 		}
 		i++;
 	}
@@ -255,11 +221,18 @@ void	ft_open_textures(t_image *textures, t_mlx *mlx)
 void	ft_doall(t_mlx *mlx, t_player *player)
 {
 	t_image	img;
+	t_image	minimap;
 
 	img.img = mlx_new_image(mlx->mlx, WIDTH, HEIGHT);
 	mlx->img = &img;
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
 			&img.line_length, &img.endian);
+
+	minimap.img = mlx_new_image(mlx->mlx, W_MAP * TILE_W, H_MAP * TILE_H);
+	mlx->minimap = &minimap;
+	minimap.addr = mlx_get_data_addr(minimap.img, &minimap.bits_per_pixel,
+			&minimap.line_length, &minimap.endian);
+
 
 
 	ft_draw_map(mlx);
@@ -342,11 +315,11 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		double wallY; 
 		wallY = mlx->player->y + wall_distance * rY;
 		wallX= mlx->player->x + wall_distance * rX;
-		if (fov > WIDTH / 2 && fov < WIDTH / 2 + 120)
+		if (fov > WIDTH / 2 - 120 && fov < WIDTH / 2 + 240)
 		{
-			ft_drawray((mlx->player->x * TILE_W + PLAYER_SIZE / 2),
-				(mlx->player->y * TILE_H + HEIGHT_TOP + PLAYER_SIZE / 2),
-				wallX * TILE_W , wallY * TILE_H + HEIGHT_TOP, mlx->img, 0x00FF0000);
+			ft_drawline((mlx->player->x * TILE_W + PLAYER_SIZE / 2),
+				(mlx->player->y * TILE_H + PLAYER_SIZE / 2),
+				wallX * TILE_W, wallY * TILE_H, mlx->minimap, 0x89a6bc);
 		}
 		fov++;
 
@@ -403,7 +376,13 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 		}
 	}	
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img->img, 0, 0);
+	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->minimap->img, MAP_X, MAP_Y);
 	mlx_destroy_image(mlx->mlx, mlx->img->img);
+	mlx_destroy_image(mlx->mlx, mlx->minimap->img);
+	mlx_destroy_image(mlx->mlx, textures[0].img);
+	mlx_destroy_image(mlx->mlx, textures[1].img);
+	mlx_destroy_image(mlx->mlx, textures[2].img);
+	mlx_destroy_image(mlx->mlx, textures[3].img);
 }
 
 int	ft_key_hooks(int keycode, t_mlx *mlx)
@@ -464,7 +443,7 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 
 	}
 	if (keycode == 65505)
-		mlx->player->Mspeed = 0.3;
+		mlx->player->Mspeed = M_SPRINT;
 	ft_doall(mlx, mlx->player);
 	return (1);
 }
@@ -472,7 +451,7 @@ int	ft_key_hooks(int keycode, t_mlx *mlx)
 int	ft_release_hooks(int keycode, t_mlx *mlx)
 {
 	if (keycode == 65505)
-		mlx->player->Mspeed = 0.1;
+		mlx->player->Mspeed = M_SPEED;
 	return (1);
 }
 
@@ -492,15 +471,15 @@ int main(int argc, char **argv)
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,0,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,1,1,1,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,8},
+			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1},
 			{1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
-			{1,0,8,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,8},
+			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1},
 			{1,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
-			{1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
-			{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
-			{1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
+			{1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
+			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+			{1,1,1,1,1,0,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
+			{1,1,1,1,1,0,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
 			{1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,0,0,1},
 			{1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1},
@@ -518,8 +497,8 @@ int main(int argc, char **argv)
 	player.dy = 0;
 	player.planeX = 0;
 	player.planeY = 0.70;
-	player.Mspeed = 0.1;
-	player.rotSpeed = 0.05;
+	player.Mspeed = M_SPEED;
+	player.rotSpeed = 0.08;
 
 	mlx.mlx = mlx_init();
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "cub3d");

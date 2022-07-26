@@ -20,17 +20,22 @@
 # include <sys/time.h>
 # include <math.h>
 
-# define WIDTH	800
+# define WIDTH	1200
 # define HEIGHT	800
 
 # define W_MAP	24
 # define H_MAP	24
-# define HEIGHT_TOP	HEIGHT / 2
+# define HEIGHT_TOP	HEIGHT
 
-# define TILE_W			WIDTH / W_MAP
-# define TILE_H			HEIGHT_TOP / H_MAP
-# define PLAYER_SIZE	TILE_W / 4
+# define TILE_W			10
+# define TILE_H			10
+# define MAP_Y			10
+# define MAP_X			(WIDTH - (W_MAP * TILE_W)) - 10
+# define PLAYER_SIZE	5
 # define OUTLINE		1
+
+# define M_SPEED		0.3
+# define M_SPRINT		0.9
 
 # define NORTH	0
 # define SOUTH	1
@@ -66,6 +71,7 @@ typedef struct s_mlx
 	void		*mlx;
 	void		*win;
 	t_image		*img;
+	t_image		*minimap;
 	t_player	*player;
 }	t_mlx;
 
