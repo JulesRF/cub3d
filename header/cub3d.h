@@ -19,11 +19,12 @@
 # include <fcntl.h>
 
 typedef struct s_data {
-	void		*mlx_ptr;
-	void		*mlx_win;
-	void		*img;
-	char		*addr;
+	// void		*mlx_ptr;
+	// void		*mlx_win;
+	// void		*img;
+	// char		*addr;
 	char		**map;
+	char		**info;
 	int			bits_per_pixel;
 	int			line_length;
 	int			endian;
