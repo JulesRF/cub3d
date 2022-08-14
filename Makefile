@@ -6,14 +6,17 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/08/14 14:36:06 by ascotto-         ###   ########.fr        #
+#    Updated: 2022/08/14 15:24:27 by ascotto-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3d
 
 SRCS_FILES	=	main.c \
-				hooks.c
+				hooks.c \
+				draw.c \
+				draw_utils.c \
+				textures.c
 				
 
 FLAGS = -Wall -Werror -Wextra -g

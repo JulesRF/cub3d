@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 14:36:51 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/14 14:43:52 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/14 15:36:37 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,19 @@ typedef struct s_mlx
 	t_image		*minimap;
 	t_player	*player;
 }	t_mlx;
+
+typedef struct s_line
+{
+	int	x0;
+	int	y0;
+	int	x1;
+	int	y1;
+	int	dx;
+	int	dy;
+	int	sx;
+	int	sy;
+	int	err;
+	int	e2;
+}	t_line;
 
 #endif
