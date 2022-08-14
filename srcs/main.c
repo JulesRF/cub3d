@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/07/26 23:49:31 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/14 14:42:34 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,35 +21,6 @@ void	my_mlx_pixel_put(t_image *data, int x, int y, int color)
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
-
-
-/* DDA ALGORIHM */
-/*void	ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
-{
-	float	dx;
-	float	dy;
-	float	len;
-	float	x;
-	float	y;
-
-	dx = x1 - x0;
-	dy = y1 - y0;
-	if (fabs(dx) > fabs(dy))
-		len = fabs(dx);
-	else
-		len = fabs(dy);
-	dx = dx / len;
-	dy = dy / len;
-	x = x0;
-	y = y0;
-	//A mettre dans une autre fonction. qui prend x0, y0, dx et dy
-	for (int i = 0; i < len ; i++)
-	{	
-		my_mlx_pixel_put(img, (int)(floorf(x)), (int)(floorf(y)), color);
-		x += dx;
-		y += dy;
-	}
-} */
 
 //BRESENHAM
 void ft_drawline(int x0, int y0, int x1, int y1, void *img, int color)
@@ -192,7 +163,7 @@ void	ft_draw_map(t_mlx *mlx)
 char	*ft_filename(int i)
 {
 	i++;
-	return ("textures/emma.xpm");
+	//return ("textures/emma.xpm");
 	if (i == SOUTH)
 		return ("textures/emma.xpm");
 	if (i == EAST)
@@ -246,8 +217,8 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 	for (int x = 0; x < WIDTH ; x++)
 	{
 		double camX = -(2 * x / (double)WIDTH - 1);
-		double rX = player->dx + player->planeX * camX;
-		double rY = player->dy + player->planeY * camX;
+		double rX = player->dx + player->planex * camX;
+		double rY = player->dy + player->planey * camX;
 		int mapx = (int)player->x;
 		int mapy = (int)player->y;
 
@@ -386,76 +357,6 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 	mlx_destroy_image(mlx->mlx, textures[3].img);
 }
 
-int	ft_key_hooks(int keycode, t_mlx *mlx)
-{
-	if (keycode == 65307)
-	{
-		exit(EXIT_SUCCESS);
-		return (0);
-	}
-
-	if (keycode == 'w')
-	{
-		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x + mlx->player->dx * mlx->player->Mspeed)] == 0)
-			mlx->player->x += mlx->player->dx * mlx->player->Mspeed;
-		if (mlx->player->map[(int)(mlx->player->y + mlx->player->dy * mlx->player->Mspeed)][(int)mlx->player->x] == 0)
-			mlx->player->y += mlx->player->dy * mlx->player->Mspeed;
-	}
-	if (keycode == 's')
-	{
-		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x - mlx->player->dx * mlx->player->Mspeed)]== 0)
-			mlx->player->x -= mlx->player->dx * mlx->player->Mspeed;
-		if (mlx->player->map[(int)(mlx->player->y - mlx->player->dy * mlx->player->Mspeed)][(int)mlx->player->x] == 0)
-			mlx->player->y -= mlx->player->dy * mlx->player->Mspeed;
-	}
-	if (keycode == 'a')
-	{
-		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x + mlx->player->dx * mlx->player->Mspeed)] == 0)
-			mlx->player->x += mlx->player->planeX * mlx->player->Mspeed;
-		if (mlx->player->map[(int)(mlx->player->y + mlx->player->planeY * mlx->player->Mspeed)][(int)mlx->player->x] == 0)
-			mlx->player->y += mlx->player->planeY * mlx->player->Mspeed;
-	}
-	if (keycode == 'd')
-	{
-		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x - mlx->player->dx * mlx->player->Mspeed)]== 0)
-			mlx->player->x -= mlx->player->planeX * mlx->player->Mspeed;
-		if (mlx->player->map[(int)(mlx->player->y - mlx->player->planeY * mlx->player->Mspeed)][(int)mlx->player->x] == 0)
-			mlx->player->y -= mlx->player->planeY * mlx->player->Mspeed;
-	}
-	if (keycode == 65363)
-	{
-		double OldX = mlx->player->dx;
-		mlx->player->dx = mlx->player->dx * cos(mlx->player->rotSpeed) -
-			mlx->player->dy * sin(mlx->player->rotSpeed);
-		mlx->player->dy = OldX * sin(mlx->player->rotSpeed) + mlx->player->dy * cos(mlx->player->rotSpeed);
-		double OldPlaneX = mlx->player->planeX;
-		mlx->player->planeX = mlx->player->planeX * cos(mlx->player->rotSpeed) - mlx->player->planeY * sin(mlx->player->rotSpeed);
-		mlx->player->planeY = OldPlaneX * sin(mlx->player->rotSpeed) + mlx->player->planeY * cos(mlx->player->rotSpeed);
-	}
-	if (keycode == 65361)
-	{
-		double OldX = mlx->player->dx;
-		mlx->player->dx = OldX * cos(-mlx->player->rotSpeed) -
-			mlx->player->dy * sin(-mlx->player->rotSpeed);
-		mlx->player->dy = OldX * sin(-mlx->player->rotSpeed) + mlx->player->dy * cos(-mlx->player->rotSpeed);
-		double OldPlaneX = mlx->player->planeX;
-		mlx->player->planeX = OldPlaneX * cos(-mlx->player->rotSpeed) - mlx->player->planeY * sin(-mlx->player->rotSpeed);
-		mlx->player->planeY = OldPlaneX * sin(-mlx->player->rotSpeed) + mlx->player->planeY * cos(-mlx->player->rotSpeed);
-
-	}
-	if (keycode == 65505)
-		mlx->player->Mspeed = M_SPRINT;
-	ft_doall(mlx, mlx->player);
-	return (1);
-}
-
-int	ft_release_hooks(int keycode, t_mlx *mlx)
-{
-	if (keycode == 65505)
-		mlx->player->Mspeed = M_SPEED;
-	return (1);
-}
-
 int main(int argc, char **argv)
 {
 	(void)argv;
@@ -496,10 +397,10 @@ int main(int argc, char **argv)
 	player.y = 5;
 	player.dx = -1;
 	player.dy = 0;
-	player.planeX = 0;
-	player.planeY = 0.70;
-	player.Mspeed = M_SPEED;
-	player.rotSpeed = 0.08;
+	player.planex = 0;
+	player.planey = 0.70;
+	player.mspeed = M_SPEED;
+	player.rotspeed = 0.08;
 
 	mlx.mlx = mlx_init();
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "cub3d");
