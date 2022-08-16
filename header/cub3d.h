@@ -25,9 +25,9 @@ typedef struct s_data {
 	// char		*addr;
 	char		**map;
 	char		**info;
-	int			bits_per_pixel;
-	int			line_length;
-	int			endian;
+	// int			bits_per_pixel;
+	// int			line_length;
+	// int			endian;
 	int			line_size;
 	int			column_size;
 	int			player_x;

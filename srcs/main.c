@@ -206,14 +206,167 @@ char	**ft_alloc_map(char *map_path, int i, int j, int large)
 // 			&data->line_length, &data->endian);
 // }
 
+void	ft_cleanmap(char **map)
+{
+	int i;
+
+	i = 0;
+	while (map[i] != 0)
+	{
+		free(map[i]);
+		i++;
+	}
+	free (map);
+}
+
+int	ft_wichline(char *str)
+{
+	int index1;
+	int index2;
+
+	index1 = ft_skipspace(str);
+	if (index1 + 1 <= ft_strlen(str))
+		index2 = index1 + 1 + ft_skipspace(str + index1 + 1);
+	if (str[index1] == 'N' && str[index2] == 'O')
+		return (0);
+	else if (str[index1] == 'S' && str[index2] == 'O')
+		return (1);
+	else if (str[index1] == 'W' && str[index2] == 'E')
+		return (2);
+	else if (str[index1] == 'E' && str[index2] == 'A')
+		return (3);
+	else if (str[index1] == 'F')
+		return (4);
+	else if (str[index1] == 'C')
+		return (5);
+	return (-5);
+}
+
+int	ft_strsize(char *str)
+{
+	int	i;
+	int	res;
+
+	res = 0;
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+	{
+		if (str[i] != ' ')
+			res++;
+		i++;
+	}
+	return (res);
+}
+
+char	*ft_fill(char *dest, char *src, int size)
+{
+	int		i;
+	int		j;
+
+	j = 0;
+	i = 0;
+	size = ft_strsize(src);
+	dest = malloc(sizeof(char) * (size + 1));
+	if (!dest)
+		return (NULL);
+	while (src[j])
+	{
+		if (src[j] != ' ')
+		{
+			dest[i] = src[j];
+			i++;
+		}
+		j++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+char	**ft_initinfo(char **info, int k)
+{
+	char	**dest;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	dest = ft_init(6);
+	if (!dest)
+		return (NULL);
+	while (j < 6)
+	{
+		i = 0;
+		while (k != j && info[i] != 0)
+		{
+			k = ft_wichline(info[i]);
+			if (k != j)
+				i++;
+		}
+		// size = ft_strsize(info[i]);
+		dest[j] = malloc(sizeof(char) * ft_strsize(info[i]) + 1);
+		dest[j][0] = '\0';
+		if (!dest[j])
+			return (NULL);
+		j++;
+	}
+	dest[6] = 0;
+	return (dest);
+}
+
+char	**ft_cleaninf(t_data *data)
+{
+	char	**dest;
+	int		i;
+	int		k;
+
+	i = 0;
+	dest = ft_init(6);
+	if (!dest)
+		return (NULL);
+	// dest = ft_initinfo(data->info, -5);
+	// if (!dest)
+	// 	return (NULL);
+	// while (data->info[i] != 0)
+	// {
+	// 	k = -5;
+	// 	while (k == -5 && data->info[i] != 0)
+	// 	{
+	// 		k = ft_wichline(data->info[i]);
+	// 		if (k == -5)
+	// 			i++;
+	// 	}
+	// 	ft_fill(dest[k], data->info[i]);
+	// 	i++;
+	// }
+	while (data->info[i] != 0)
+	{
+		k = -5;
+		while (k == -5 && data->info[i] != 0)
+		{
+			k = ft_wichline(data->info[i]);
+			if (k == -5)
+				i++;
+		}
+		dest[k] = ft_fill(dest[k], data->info[i], 0);
+		if (!dest[k])
+			return (NULL);
+		i++;
+	}
+	dest[6] = 0;
+	ft_cleanmap(data->info);
+	return (dest);
+}
+
 int	ft_init_mstruct(t_data *data, char *arg)
 {
 	(void)arg;
-    // data->map = ft_alloc_map(arg, 0, 0, -5);
-	// if (!data->map)/
-		// return (1);
     data->line_size = ft_largest(data->map);
 	data->column_size = ft_longuest(data->map);
+	data->info = ft_cleaninf(data);
+	if (!data->info)
+		return (1);
 	return (0);
 }
 
@@ -298,6 +451,13 @@ int	ft_checkname(char *str, char *set)
 	return (0);
 }
 
+int	ft_isplyr(char c)
+{
+	if (c != 'N' && c != 'S' && c != 'O' && c != 'W')
+		return (0);
+	return (1);
+}
+
 int	ft_checkline(char **map, int i, int j)
 {
 	while (map[i] != 0)
@@ -309,12 +469,13 @@ int	ft_checkline(char **map, int i, int j)
 				j++;
 			else if (map[i][j] == '0')
 			{
-				if ((j == 0) || (j >= 1 && map[i][j - 1] != '1'))
-					return (printf("Error\nInvalid map format1\n"), 1); //i = %d j = %d\n", i, j), 1);
+				if ((j == 0) || (j >= 1 && (map[i][j - 1] != '1'
+					&& !ft_isplyr(map[i][j - 1]))))
+					return (printf("Error\nInvalid map format\n"), 1); //i = %d j = %d\n", i, j), 1);
 				while (map[i][j] && map[i][j] == '0')
 					j++;
-				if (!map[i][j] || map[i][j] != '1' )
-					return (printf("Error\nInvalid map format2\n"), 1); //i = %d j = %d\n", i, j), 1);
+				if (!map[i][j] || (map[i][j] != '1'  && !ft_isplyr(map[i][j])))
+					return (printf("Error\nInvalid map format\n"), 1);//i = %d j = %d\n", i, j), 1);
 			}
 			else
 				j++;
@@ -335,13 +496,12 @@ int	ft_checkcolumn(char **map, int i, int j)
 				i++;
 			else if (map[i] != 0 && map[i][j] == '0')
 			{
-				if ((i == 0) || (i >= 1 && map[i - 1][j] != '1'))
-					return (printf("Error\nInvalid map format3\n"), 1); //i = %d j = %d\n", i, j), 1);
+				if ((i == 0) || (i >= 1 && (map[i - 1][j] != '1' && !ft_isplyr(map[i - 1][j]))))
+					return (printf("Error\nInvalid map format\n"), 1); //i = %d j = %d\n", i, j), 1);
 				while (map[i] != 0 && map[i][j] == '0')
 					i++;
-				if (map[i] == 0 || map[i][j] != '1' || map[i][j] != 'N'
-					|| map[i][j] != 'S' || map[i][j] != 'E' || map[i][j] != 'W')
-					return (printf("Error\nInvalid map format4\n"), 1); //i = %d j = %d\n", i, j), 1);
+				if (map[i] == 0 || (map[i][j] != '1' && !ft_isplyr(map[i][j])))
+					return (printf("Error\nInvalid map format\n"), 1); //i = %d j = %d\n", i, j), 1);
 			}
 			else
 				i++;
@@ -376,19 +536,6 @@ int	ft_checkplayer(char **map, int i, int j)
 	if (player != 1)
 		return (printf("Error\nMake sure there is 1 Player\n"), 1);
 	return (0);
-}
-
-void	ft_cleanmap(char **map)
-{
-	int i;
-
-	i = 0;
-	while (map[i] != 0)
-	{
-		free(map[i]);
-		i++;
-	}
-	free (map);
 }
 
 int	ft_checkobj(char *str, int obj)
@@ -608,12 +755,11 @@ void	ft_cleandata(t_data *data)
 {
 	ft_cleanmap(data->map);
 	ft_cleanmap(data->info);
-	free (data);
 }
 
 int main(int argc, char **argv)
 {
-    t_data	*data;
+    t_data	data;
 	int		i;
 	int		j;
 
@@ -622,34 +768,43 @@ int main(int argc, char **argv)
 	if (argc != 2)
 		return (printf("Error\nInvalid arguments number\n"), 1);
 
-	data = malloc(sizeof(t_data));
-
-	if (ft_checkmap(argv[1], data))
+	if (ft_checkmap(argv[1], &data))
 		exit(1);
 	else
 		printf("MAP CORRECTE SELON LE PARSING\n");
-
-	if (ft_init_mstruct(data, argv[1]))
+	if (ft_init_mstruct(&data, argv[1]))
 		return (printf("Error\nBad allocation\n"), 1);
-
 	// printf ("line_size = %d\n", img->line_size);
 	// printf ("column_size = %d\n", img->column_size);
 	// ft_init_mlxwinimg(img);
 
-	while (data->map[i] != 0)
+	while (data.map[i] != 0)
 	{
 		j = 0 ;
-		while (data->map[i][j] != '\0')
+		while (data.map[i][j] != '\0')
 		{
 			// printf("%d ", data->map[i][j]);
 			j++;
 		}
-		printf("%s\\0",data->map[i]);
+		printf("%s\\0",data.map[i]);
+		printf("\n");
+		i++;
+	}
+	i = 0;
+	while (data.info[i] != 0)
+	{
+		j = 0;
+		while (data.info[i][j] != '\0')
+		{
+			// printf("%d ", data->map[i][j]);
+			j++;
+		}
+		printf("%s\\0",data.info[i]);
 		printf("\n");
 		i++;
 	}
 
-	ft_cleandata(data);
+	ft_cleandata(&data);
 	// ft_draw_map(img, img->map, img->line_size * 25, img->column_size * 25);
 
 	// mlx_put_image_to_window(img->mlx_ptr, img->mlx_win, img->img, 0, 0);
