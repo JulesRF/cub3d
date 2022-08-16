@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:26:39 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/16 13:13:18 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/16 16:45:40 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	ft_print(t_raycasting *rc, t_mlx *mlx, t_image *textures, int x)
 	int		y;
 
 	texture = textures[rc->tex_number];
-	y = rc->drawstart - 1;
+	y = rc->drawstart;
 	rc->tex_x = (int)((rc->wallx * (double)texture.tw));
 	if (rc->side == 0 && rc->rx > 0)
 		rc->tex_x = texture.tw - rc->tex_x - 1;
@@ -106,15 +106,14 @@ void	ft_print(t_raycasting *rc, t_mlx *mlx, t_image *textures, int x)
 	rc->step = 1.0 * texture.th / rc->lineheight;
 	rc->tex_pos = (rc->drawstart - HEIGHT_TOP / 2
 			+ rc->lineheight / 2) * rc->step;
-	while (++y < rc->drawend)
+	while (y < rc->drawend)
 	{
 		tex_y = (int)rc->tex_pos & (texture.th - 1);
 		rc->tex_pos += rc->step;
 		rc->dst = texture.addr + (tex_y * texture.line_length
 				+ rc->tex_x * (texture.bits_per_pixel / 8));
 		rc->color = *(unsigned int *)rc->dst;
-		if (rc->side == 1)
-			rc->color = (rc->color >> 1) & 8355711;
 		my_mlx_pixel_put(mlx->img, x, y, rc->color);
+		y++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 14:35:07 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/14 15:37:03 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/16 17:59:49 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@ static int	ft_key_hooks_4(int keycode, t_mlx *mlx)
 {
 	if (keycode == 65307)
 	{
+		if (mlx->mlx && mlx->win)
+			mlx_destroy_window(mlx->mlx, mlx->win);
+		if (mlx->mlx)
+		{
+			mlx_destroy_display(mlx->mlx);
+			free(mlx->mlx);
+		}
 		exit(EXIT_SUCCESS);
 		return (0);
 	}
