@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/08/16 12:38:50 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/16 13:16:13 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 	ft_init_images_and_map(&img, &minimap, mlx);
 	ft_open_textures(textures, mlx);
 	x = 0;
+	rc.fov = 0;
 	while (x < WIDTH)
 	{
 		ft_init_rc(&rc, player, x);

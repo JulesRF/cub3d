@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:26:39 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/16 12:37:45 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/16 13:13:18 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_compute_line_height(t_raycasting *rc, t_mlx *mlx)
 				rc->wallx * TILE_W, rc->wally * TILE_H),
 			mlx->minimap, 0x89a6bc);
 	}
-	rc->fov++;
+	rc->fov = rc->fov + 1;
 	rc->lineheight = (int)(HEIGHT_TOP / rc->wall_distance);
 	rc->drawstart = -rc->lineheight / 2 + HEIGHT_TOP / 2;
 	if (rc->drawstart < 0)

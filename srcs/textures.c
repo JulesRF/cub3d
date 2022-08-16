@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:23:53 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/14 15:33:50 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/16 13:32:20 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ char	*ft_filename(int i)
 {
 	i++;
 	if (i == SOUTH)
-		return ("textures/emma.xpm");
+		return ("textures/hspriet.xpm");
 	if (i == EAST)
-		return ("textures/eagle.xpm");
+		return ("textures/pdubois.xpm");
 	if (i == WEST)
-		return ("textures/redbrick.xpm");
+		return ("textures/jroux-fo.xpm");
 	else
-		return ("textures/pillar.xpm");
+		return ("textures/ychibani.xpm");
 }
 
 int	ft_open_textures(t_image *textures, t_mlx *mlx)
