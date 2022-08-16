@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 14:36:51 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/14 15:36:37 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/16 12:14:17 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,37 @@ typedef struct s_mlx
 	t_image		*minimap;
 	t_player	*player;
 }	t_mlx;
+
+typedef struct s_raycasting
+{	
+	int				fov;
+	double			camx;
+	double			rx;
+	double			ry;
+	int				mapx;
+	int				mapy;
+	double			sidex;
+	double			sidey;
+	double			deltax;
+	double			deltay;
+	int				stepx;
+	int				stepy;
+	int				hit;
+	int				side;
+	int				tex_number;
+	double			wall_distance;
+	double			wallx;
+	double			wally;
+	int				lineheight;
+	int				drawstart;
+	int				drawend;
+	char			*dst;
+	unsigned int	color;
+	t_image			texture;
+	int				tex_x;
+	double			step;
+	double			tex_pos;
+}	t_raycasting;
 
 typedef struct s_line
 {

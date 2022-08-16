@@ -6,7 +6,7 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/08/14 15:24:27 by ascotto-         ###   ########.fr        #
+#    Updated: 2022/08/16 12:39:03 by ascotto-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,9 @@ SRCS_FILES	=	main.c \
 				hooks.c \
 				draw.c \
 				draw_utils.c \
-				textures.c
+				textures.c \
+				init.c \
+				raycasting.c
 				
 
 FLAGS = -Wall -Werror -Wextra -g
