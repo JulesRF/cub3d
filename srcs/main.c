@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/05/16 17:56:53 by jroux-fo         ###   ########.fr       */
+/*   Updated: 2022/08/17 15:11:20 by jroux-fo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,36 +284,36 @@ char	*ft_fill(char *dest, char *src, int size)
 	return (dest);
 }
 
-char	**ft_initinfo(char **info, int k)
-{
-	char	**dest;
-	int		i;
-	int		j;
+// char	**ft_initinfo(char **info, int k)
+// {
+// 	char	**dest;
+// 	int		i;
+// 	int		j;
 
-	i = 0;
-	j = 0;
-	dest = ft_init(6);
-	if (!dest)
-		return (NULL);
-	while (j < 6)
-	{
-		i = 0;
-		while (k != j && info[i] != 0)
-		{
-			k = ft_wichline(info[i]);
-			if (k != j)
-				i++;
-		}
-		// size = ft_strsize(info[i]);
-		dest[j] = malloc(sizeof(char) * ft_strsize(info[i]) + 1);
-		dest[j][0] = '\0';
-		if (!dest[j])
-			return (NULL);
-		j++;
-	}
-	dest[6] = 0;
-	return (dest);
-}
+// 	i = 0;
+// 	j = 0;
+// 	dest = ft_init(6);
+// 	if (!dest)
+// 		return (NULL);
+// 	while (j < 6)
+// 	{
+// 		i = 0;
+// 		while (k != j && info[i] != 0)
+// 		{
+// 			k = ft_wichline(info[i]);
+// 			if (k != j)
+// 				i++;
+// 		}
+// 		// size = ft_strsize(info[i]);
+// 		dest[j] = malloc(sizeof(char) * ft_strsize(info[i]) + 1);
+// 		dest[j][0] = '\0';
+// 		if (!dest[j])
+// 			return (NULL);
+// 		j++;
+// 	}
+// 	dest[6] = 0;
+// 	return (dest);
+// }
 
 char	**ft_cleaninf(t_data *data)
 {
@@ -359,6 +359,73 @@ char	**ft_cleaninf(t_data *data)
 	return (dest);
 }
 
+int	ft_getplyr(t_data *data)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (data->map[i] != 0)
+	{
+		j = 0;
+		while (data->map[i][j])
+		{
+			if (data->map[i][j] == 'S' || data->map[i][j] == 'N'
+				|| data->map[i][j] == 'W' || data->map[i][j] == 'E')
+			{
+				data->player_x = j;
+				data->player_y = i;
+				return (0);
+			}
+			j++;
+		}
+		i++;
+	}
+	return (printf("Error\nCouldn't find player after parsing\n"), 1);
+}
+
+int	ft_iterative_power(int nb, int power)
+{
+	int	i;
+	int	res;
+
+	i = 0;
+	res = 1;
+	if (power < 0)
+		return (0);
+	if (power == 0)
+		return (1);
+	while (i < power)
+	{
+		res = res * nb;
+		i++;
+	}
+	return (res);
+}
+
+int	ft_hexatodeci(char *str, char *base)
+{
+	int	p;
+	int res;
+	int i;
+	int	r;
+
+	i = 0;
+	res = 0;
+	p = ft_strlen(str) - 1;
+	while (str[i])
+	{
+		if (base[str[i] - 48] >= '0' && base[str[i] - 48] <= '9')
+			r = str[i] - 48;
+		else
+			r = str[i] - 'A' + 10;
+		res = res + r * ft_iterative_power(16, p);
+		p--;
+		i++;
+	}
+	return (res);
+}
+
 int	ft_init_mstruct(t_data *data, char *arg)
 {
 	(void)arg;
@@ -366,6 +433,8 @@ int	ft_init_mstruct(t_data *data, char *arg)
 	data->column_size = ft_longuest(data->map);
 	data->info = ft_cleaninf(data);
 	if (!data->info)
+		return (1);
+	if (ft_getplyr(data))
 		return (1);
 	return (0);
 }
@@ -803,6 +872,8 @@ int main(int argc, char **argv)
 		printf("\n");
 		i++;
 	}
+	printf("COORDONNEES JOUEUR = player_y = %d, player_x = %d\n", data.player_y, data.player_x);
+	printf("CONVERSION : %d\n", ft_hexatodeci("FF","0123456789abcdef"));
 
 	ft_cleandata(&data);
 	// ft_draw_map(img, img->map, img->line_size * 25, img->column_size * 25);

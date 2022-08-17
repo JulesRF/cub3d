@@ -6,7 +6,7 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/05/16 14:51:01 by jroux-fo         ###   ########.fr        #
+#    Updated: 2022/07/29 17:28:49 by jroux-fo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ SRCS_FILES	=	main.c 					\
 
 FLAGS = -Wall -Werror -Wextra -Imlx_linux -g
 
-MLXFLAGS = -Lmlx_linux -lmlx_Linux -L/usr/lib -I mlx_linux -lXext -lX11 -lm -lz
+#MLXFLAGS = -Lmlx_linux -lmlx_Linux -L/usr/lib -I mlx_linux -lXext -lX11 -lm -lz
 
 INCLUDES = header
 
@@ -46,7 +46,8 @@ $(OBJ_DIR)/%.o: $(PATH)/%.c
 	@$(shell gcc $(FLAGS) -I $(INCLUDES) -c $< -o $@)
 
 $(NAME): $(OBJ)
-	@$(shell gcc $(OBJ) $(MLXFLAGS) -o $(NAME))
+	@$(shell gcc $(OBJ) -o $(NAME))
+#$(MLXFLAGS)
 	@printf "Executable $@ created !\n"
 
 clean:
