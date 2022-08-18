@@ -5,14 +5,14 @@ J aimerais :
 	->Height de la fenetre (en pixels)
 
 
-	->WIDTH de la MAP (en nombre de cases) OK
-	->HEIGHT de la MAP (en cases)		   OK
+	->WIDTH de la MAP (en nombre de cases) 	OK
+	->HEIGHT de la MAP (en cases)		   	OK
 	
 	->x et y de depart du joueur, en cases de la map (genre map[2][5]),	 OK
 		dans 2 var x = 5, y = 2; map[y][x]
 	
-	->Floor color in HEXA in an int
-		same for ceiling
+	->Floor color in HEXA in an int			OK
+		same for ceiling					OK
 
 	->a char ** named textures           	   OK
 		textures[0] = path to NORTH texture
@@ -22,5 +22,4 @@ J aimerais :
 
 Merci beaucoup monsieur
 
-16777215
-RGB = (R*65536)+(G*256)+B 
+RGB = (R*65536)+(G*256)+B

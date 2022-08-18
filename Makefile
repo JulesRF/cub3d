@@ -6,25 +6,23 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/07/29 17:28:49 by jroux-fo         ###   ########.fr        #
+#    Updated: 2022/08/18 16:10:06 by jroux-fo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3d
 
 SRCS_FILES	=	main.c 					\
+				getmap.c				\
+				checkmap.c				\
+				cleaninf.c				\
+				alloc_map.c				\
+				init_mstruct.c			\
+				parsing_utils.c			\
 				get_next_line.c			\
+				checkmap_utils.c		\
+				checkmap_utils2.c		\
 				get_next_line_utils.c	\
-				# ft_itoa.c				\
-				# ft_init.c				\
-				# ft_utils.c				\
-				# ft_switch.c				\
-				# ft_square.c				\
-				# ft_checkmap.c			\
-				# ft_alloc_map.c			\
-				# ft_checkchar.c			\
-				# ft_enemy_move.c			\
-				# ft_checkrectangle.c		\
 
 FLAGS = -Wall -Werror -Wextra -Imlx_linux -g
 
