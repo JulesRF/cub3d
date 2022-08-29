@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 11:49:36 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/16 13:15:41 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/29 09:10:43 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,13 @@ void	ft_init_images_and_map(t_image *img, t_image *minimap, t_mlx *mlx)
 	mlx->img = img;
 	img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel,
 			&img->line_length, &img->endian);
-	minimap->img = mlx_new_image(mlx->mlx, W_MAP * TILE_W, H_MAP * TILE_H);
+	minimap->img = mlx_new_image(mlx->mlx, mlx->player->w_map * TILE_W,
+			mlx->player->h_map * TILE_H);
 	mlx->minimap = minimap;
 	minimap->addr = mlx_get_data_addr(minimap->img, &minimap->bits_per_pixel,
 			&minimap->line_length, &minimap->endian);
 	ft_draw_map(mlx);
-	ft_draw_minimap(mlx, W_MAP, H_MAP);
+	ft_draw_minimap(mlx, mlx->player->w_map, mlx->player->h_map);
 }
 
 static void	ft_init2(t_raycasting *rc, t_player *player)

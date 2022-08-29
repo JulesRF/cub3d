@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 14:36:51 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/16 12:14:17 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/29 09:27:13 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,32 @@
 # define WIDTH	1200
 # define HEIGHT	800
 
-# define W_MAP	24
-# define H_MAP	24
-# define HEIGHT_TOP	HEIGHT
-
-# define TILE_W			10
-# define TILE_H			10
+# define TILE_W			5
+# define TILE_H			5
 # define MAP_Y			10
 # define MAP_X			950//(WIDTH - (W_MAP * TILE_W)) - 10
 # define PLAYER_SIZE	5
 # define OUTLINE		1
 
 # define M_SPEED		0.3
+# define ROT_SPEED		0.08
 # define M_SPRINT		0.9
 
 # define NORTH	0
 # define SOUTH	1
 # define EAST	2
 # define WEST	3
+
+typedef struct s_data {
+	char		**map;
+	char		**info;
+	int			line_size;
+	int			column_size;
+	int			player_x;
+	int			player_y;
+	int			c_color;
+	int			f_color;
+}	t_data;
 
 typedef struct s_image
 {
@@ -58,7 +66,10 @@ typedef struct s_player
 	float	planey;
 	double	mspeed;
 	double	rotspeed;
-	int		map[H_MAP][W_MAP];
+	int		w_map;
+	int		h_map;
+	char	**map;
+	t_data	*data;
 }	t_player;
 
 typedef struct s_mlx

@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:03:51 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/14 15:06:19 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/29 09:17:35 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ void	ft_draw_minimap(t_mlx *mlx, int w, int h)
 		j = 0;
 		while (j < w)
 		{
-			if (mlx->player->map[i][j] == 1)
+			if (mlx->player->map[i][j] == '1')
 				ft_draw_square(mlx, j * TILE_W + x, i * TILE_H + y, 0x606060);
-			if (mlx->player->map[i][j] == 0)
+			if (mlx->player->map[i][j] != '1')
 				ft_draw_square(mlx, j * TILE_W + x, i * TILE_H + y, 0xC0C0C0);
 			j++;
 		}
@@ -66,11 +66,11 @@ void	ft_draw_map(t_mlx *mlx)
 	int		color;
 
 	y = 0;
-	color = 0x00FFFF;
-	while (y < HEIGHT_TOP)
+	color = mlx->player->data->c_color;
+	while (y < HEIGHT)
 	{
-		if (y > HEIGHT_TOP / 2)
-			color = 0x00000020;
+		if (y > HEIGHT / 2)
+			color = mlx->player->data->f_color;
 		x = -1;
 		while (++x < WIDTH)
 			my_mlx_pixel_put(mlx->img, x, y, color);

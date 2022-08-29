@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:26:39 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/16 16:45:40 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/29 09:21:26 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ void	ft_get_wall_distance(t_raycasting *rc, t_player *player)
 			rc->mapy += rc->stepy;
 			rc->side = 1;
 		}
-		rc->tex_number = player->map[rc->mapy][rc->mapx];
-		if (rc->tex_number > 0)
+		rc->tex_number = player->map[rc->mapy][rc->mapx] - 48;
+		if (rc->tex_number == 1)
 			rc->hit = 1;
 	}
 	ft_wall_distance_utils(rc);
@@ -60,13 +60,13 @@ void	ft_compute_line_height(t_raycasting *rc, t_mlx *mlx)
 			mlx->minimap, 0x89a6bc);
 	}
 	rc->fov = rc->fov + 1;
-	rc->lineheight = (int)(HEIGHT_TOP / rc->wall_distance);
-	rc->drawstart = -rc->lineheight / 2 + HEIGHT_TOP / 2;
+	rc->lineheight = (int)(HEIGHT / rc->wall_distance);
+	rc->drawstart = -rc->lineheight / 2 + HEIGHT / 2;
 	if (rc->drawstart < 0)
 		rc->drawstart = 0;
-	rc->drawend = rc->lineheight / 2 + HEIGHT_TOP / 2;
-	if (rc->drawend >= HEIGHT_TOP)
-		rc->drawend = HEIGHT_TOP - 1;
+	rc->drawend = rc->lineheight / 2 + HEIGHT / 2;
+	if (rc->drawend >= HEIGHT)
+		rc->drawend = HEIGHT - 1;
 }
 
 void	ft_find_texture(t_raycasting *rc)
@@ -104,7 +104,7 @@ void	ft_print(t_raycasting *rc, t_mlx *mlx, t_image *textures, int x)
 	if (rc->side == 1 && rc->ry < 0)
 		rc->tex_x = texture.tw - rc->tex_x - 1;
 	rc->step = 1.0 * texture.th / rc->lineheight;
-	rc->tex_pos = (rc->drawstart - HEIGHT_TOP / 2
+	rc->tex_pos = (rc->drawstart - HEIGHT / 2
 			+ rc->lineheight / 2) * rc->step;
 	while (y < rc->drawend)
 	{
