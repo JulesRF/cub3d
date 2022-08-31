@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/08/31 16:20:27 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/31 16:46:31 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_init_player(t_player *player, t_data *data)
 	player->dx = -1;
 	player->dy = 0;
 	player->planex = 0;
-	player->planey = 0->70;
+	player->planey = 0.70;
 	player->mspeed = M_SPEED;
 	player->rotspeed = ROT_SPEED;
 	player->w_map = data->line_size;
@@ -69,6 +69,8 @@ int	main(int argc, char **argv)
 		exit(1);
 	if (ft_init_mstruct(&data, argv[1]))
 		return (printf("Error\nBad allocation\n"), 1);
+	printf ("line_size = %d\n", data.line_size);
+	printf ("column_size = %d\n", data.column_size);
 	ft_init_player(&player, &data);
 	mlx.mlx = mlx_init();
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "cub3d");
