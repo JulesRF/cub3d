@@ -6,29 +6,35 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/06/22 16:00:35 by ascotto-         ###   ########.fr        #
+#    Updated: 2022/08/29 08:54:47 by ascotto-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3d
 
-SRCS_FILES	=	main.c 					\
-				# ft_itoa.c				\
-				# ft_init.c				\
-				# ft_utils.c				\
-				# ft_switch.c				\
-				# ft_square.c				\
-				# ft_checkmap.c			\
-				# ft_alloc_map.c			\
-				# ft_checkchar.c			\
-				# ft_enemy_move.c			\
-				# ft_checkrectangle.c		\
+SRCS_FILES	=	main.c					\
+				hooks.c					\
+				draw.c				 	\
+				draw_utils.c			\
+				textures.c 				\
+				init.c 					\
+				raycasting.c			\
+				getmap.c				\
+				checkmap.c				\
+				cleaninf.c				\
+				alloc_map.c				\
+				init_mstruct.c			\
+				parsing_utils.c			\
+				get_next_line.c			\
+				checkmap_utils.c		\
+				checkmap_utils2.c		\
+				get_next_line_utils.c					
 
 FLAGS = -Wall -Werror -Wextra -g
 
 MLXFLAGS = -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
 
-INCLUDES = header
+INCLUDES = includes
 
 PATH = srcs
 
