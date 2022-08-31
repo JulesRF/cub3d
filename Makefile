@@ -6,13 +6,19 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/08/18 16:10:06 by jroux-fo         ###   ########.fr        #
+#    Updated: 2022/08/29 08:54:47 by ascotto-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3d
 
-SRCS_FILES	=	main.c 					\
+SRCS_FILES	=	main.c					\
+				hooks.c					\
+				draw.c				 	\
+				draw_utils.c			\
+				textures.c 				\
+				init.c 					\
+				raycasting.c			\
 				getmap.c				\
 				checkmap.c				\
 				cleaninf.c				\
@@ -22,13 +28,13 @@ SRCS_FILES	=	main.c 					\
 				get_next_line.c			\
 				checkmap_utils.c		\
 				checkmap_utils2.c		\
-				get_next_line_utils.c	\
+				get_next_line_utils.c					
 
-FLAGS = -Wall -Werror -Wextra -Imlx_linux -g
+FLAGS = -Wall -Werror -Wextra -g
 
-#MLXFLAGS = -Lmlx_linux -lmlx_Linux -L/usr/lib -I mlx_linux -lXext -lX11 -lm -lz
+MLXFLAGS = -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
 
-INCLUDES = header
+INCLUDES = includes
 
 PATH = srcs
 
@@ -41,11 +47,10 @@ all: $(NAME)
 $(OBJ_DIR)/%.o: $(PATH)/%.c
 	@$(shell mkdir -p $(OBJ_DIR))
 	@printf "Compiling $< ...\n"
-	@$(shell gcc $(FLAGS) -I $(INCLUDES) -c $< -o $@)
+	@$(shell cc $(FLAGS) -I $(INCLUDES) -c $< -o $@)
 
 $(NAME): $(OBJ)
-	@$(shell gcc $(OBJ) -o $(NAME))
-#$(MLXFLAGS)
+	@$(shell cc $(OBJ) $(MLXFLAGS) -o $(NAME))
 	@printf "Executable $@ created !\n"
 
 clean:
