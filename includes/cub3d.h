@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/08/29 08:57:57 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/31 16:05:46 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,24 +87,19 @@ void		ft_cleanmap(char **map);
 void		ft_init_mlxwinimg(t_data *data);
 
 //Raycasting
+void		ft_doall(t_mlx *mlx, t_player *player);
 int			ft_key_hooks(int keycode, t_mlx *mlx);
 int			ft_release_hooks(int keycode, t_mlx *mlx);
 
-void		ft_doall(t_mlx *mlx, t_player *player);
-
-void		ft_draw_player(t_mlx *mlx, float x, float y);
-void		ft_draw_minimap(t_mlx *mlx, int w, int h);
 void		ft_draw_map(t_mlx *mlx);
 
 t_line		ft_line(int x0, int y0, int x1, int y1);
-void		ft_draw_square(t_mlx *mlx, int x, int y, int color);
 void		ft_drawline(t_line line, void *img, int color);
 void		my_mlx_pixel_put(t_image *data, int x, int y, int color);
 
 int			ft_open_textures(t_image *textures, t_mlx *mlx);
-char		*ft_filename(int i);
 
-void		ft_init_images_and_map(t_image *img, t_image *minimap, t_mlx *mlx);
+void		ft_init_image(t_image *img, t_mlx *mlx);
 void		ft_init_rc(t_raycasting *rc, t_player *player, int x);
 
 void		ft_print(t_raycasting *rc, t_mlx *mlx, t_image *textures, int x);
