@@ -37,12 +37,30 @@ int	ft_getplyr(t_data *data)
 	return (printf("Error\nCouldn't find player after parsing\n"), 1);
 }
 
+int	ft_getgoodindex(char *str, int j)
+{
+	int	i;
+
+	i = j;
+	while (str[i])
+	{
+		if (str[i] == ',')
+			return (i + 1);
+		i++;
+	}
+	return (0);
+}
+
 int	ft_getcolor(char *str)
 {
 	int	res;
+	int	i;
+	int	j;
 
-	res = (ft_atoi(str + 1) * 65536) + (ft_atoi(str + 5) * 256)
-		+ ft_atoi(str + 9);
+	i = ft_getgoodindex(str, 1);
+	j = ft_getgoodindex(str, i);
+	res = (ft_atoi(str + 1) * 65536) + (ft_atoi(str + i) * 256)
+		+ ft_atoi(str + j);
 	return (res);
 }
 
