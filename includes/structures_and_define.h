@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 14:36:51 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/29 09:27:13 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/31 15:36:45 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@
 
 # define NORTH	0
 # define SOUTH	1
-# define EAST	2
-# define WEST	3
+# define WEST	2
+# define EAST	3
 
 typedef struct s_data {
 	char		**map;
