@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 14:36:51 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/31 15:36:45 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/31 16:03:12 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,11 @@ typedef struct s_mlx
 	void		*mlx;
 	void		*win;
 	t_image		*img;
-	t_image		*minimap;
 	t_player	*player;
 }	t_mlx;
 
 typedef struct s_raycasting
 {	
-	int				fov;
 	double			camx;
 	double			rx;
 	double			ry;
