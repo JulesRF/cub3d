@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:26:39 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/29 09:21:26 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/09/01 16:46:48 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,16 @@ void	ft_get_wall_distance(t_raycasting *rc, t_player *player)
 			rc->mapy += rc->stepy;
 			rc->side = 1;
 		}
-		rc->tex_number = player->map[rc->mapy][rc->mapx] - 48;
-		if (rc->tex_number == 1)
+		if (player->map[rc->mapy][rc->mapx] != '0')
 			rc->hit = 1;
 	}
 	ft_wall_distance_utils(rc);
 }
 
-//I print the minimaps'rays here too, its kinda the same step
 void	ft_compute_line_height(t_raycasting *rc, t_mlx *mlx)
 {
 	rc->wally = mlx->player->y + rc->wall_distance * rc->ry;
 	rc->wallx = mlx->player->x + rc->wall_distance * rc->rx;
-	if (rc->fov > WIDTH / 2 - 120 && rc->fov < WIDTH / 2 + 240)
-	{
-		ft_drawline(ft_line((mlx->player->x * TILE_W + PLAYER_SIZE / 2),
-				(mlx->player->y * TILE_H + PLAYER_SIZE / 2),
-				rc->wallx * TILE_W, rc->wally * TILE_H),
-			mlx->minimap, 0x89a6bc);
-	}
-	rc->fov = rc->fov + 1;
 	rc->lineheight = (int)(HEIGHT / rc->wall_distance);
 	rc->drawstart = -rc->lineheight / 2 + HEIGHT / 2;
 	if (rc->drawstart < 0)

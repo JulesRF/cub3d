@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:00:30 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/14 15:21:47 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/08/31 15:51:32 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,25 +69,5 @@ void	ft_drawline(t_line line, void *img, int color)
 			line.err += line.dx;
 			line.y0 += line.sy;
 		}
-	}
-}
-
-void	ft_draw_square(t_mlx *mlx, int x, int y, int color)
-{
-	double	i;
-	double	j;
-
-	i = 0;
-	while (y + i < y + (TILE_H))
-	{
-		j = 0;
-		while (x + j < x + (TILE_W))
-		{
-			my_mlx_pixel_put(mlx->minimap, x + j, y + i, color);
-			if (i >= TILE_H - OUTLINE || j >= TILE_W - OUTLINE)
-				my_mlx_pixel_put(mlx->minimap, x + j, y + i, 0x000000);
-			j++;
-		}
-		i++;
 	}
 }

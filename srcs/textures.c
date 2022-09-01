@@ -6,17 +6,18 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:23:53 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/31 15:46:18 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/09/01 16:54:39 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-char	*ft_filename(int i, t_data *data)
+static char	*ft_filename(int i, t_data *data)
 {
 	i++;
+	(void)data;
 	if (i == SOUTH)
-		return (data->info[SOUTH]);
+		return ("textures/hspriet.xpm");
 	if (i == EAST)
 		return ("textures/pdubois.xpm");
 	if (i == WEST)
