@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:06:55 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/08/31 16:05:46 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/09/01 17:01:26 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void		ft_cleanmap(char **map);
 void		ft_init_mlxwinimg(t_data *data);
 
 //Raycasting
-int		ft_doall(t_mlx *mlx, t_player *player);
+int			ft_doall(t_mlx *mlx, t_player *player);
 int			ft_key_hooks(int keycode, t_mlx *mlx);
 int			ft_release_hooks(int keycode, t_mlx *mlx);
 

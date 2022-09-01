@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:23:53 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/09/01 16:55:32 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/09/01 17:00:42 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ int	ft_open_textures(t_image *textures, t_mlx *mlx)
 	while (i < 4)
 	{
 		texture.img = mlx_xpm_file_to_image(mlx->mlx,
-			mlx->player->data->info[i] + 2, &texture.tw, &texture.th);
+				mlx->player->data->info[i] + 2, &texture.tw, &texture.th);
 		if (texture.img != NULL)
 		{
 			texture.addr = mlx_get_data_addr(texture.img,
-				&texture.bits_per_pixel, &texture.line_length,
-				&texture.endian);
+					&texture.bits_per_pixel, &texture.line_length,
+					&texture.endian);
 		}
 		if (ft_open_textures2(texture, textures, mlx, i))
 			return (1);

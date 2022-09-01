@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/09/01 16:55:15 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/09/01 16:58:17 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,7 @@ int	main(int argc, char **argv)
 		exit(1);
 	if (ft_init_mstruct(&data, argv[1]))
 		return (printf("Error\nBad allocation\n"), 1);
-	printf ("line_size = %d\n", data.line_size);
-	printf ("column_size = %d\n", data.column_size);
 	ft_init_player(&player, &data);
-	// printf("%s\n", data.info[0]);
-	// printf("%s\n", data.info[1]);
-	// printf("%s\n", data.info[2]);
-	// printf("%s\n", data.info[3]);
 	mlx.mlx = mlx_init();
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "cub3d");
 	mlx.player = &player;

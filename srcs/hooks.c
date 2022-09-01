@@ -5,27 +5,30 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2'0'22/'0'8/'1'4 '1'4:35:'0'7 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/09/01 16:51:11 by ascotto-         ###   ########.fr       */
+/*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
+/*   Updated: 2022/09/01 16:59:49 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+static int	ft_exit_clean(t_mlx *mlx)
+{
+	if (mlx->mlx && mlx->win)
+		mlx_destroy_window(mlx->mlx, mlx->win);
+	if (mlx->mlx)
+	{
+		mlx_destroy_display(mlx->mlx);
+		free(mlx->mlx);
+	}
+	exit(EXIT_SUCCESS);
+	return (0);
+}
+
 static int	ft_key_hooks_4(int keycode, t_mlx *mlx)
 {
 	if (keycode == 65307)
-	{
-		if (mlx->mlx && mlx->win)
-			mlx_destroy_window(mlx->mlx, mlx->win);
-		if (mlx->mlx)
-		{
-			mlx_destroy_display(mlx->mlx);
-			free(mlx->mlx);
-		}
-		exit(EXIT_SUCCESS);
-		return (0);
-	}
+		return (ft_exit_clean(mlx));
 	if (keycode == 'a')
 	{
 		if (mlx->player->map[(int)mlx->player->y][(int)(mlx->player->x
