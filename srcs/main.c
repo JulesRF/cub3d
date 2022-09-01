@@ -12,15 +12,16 @@
 
 #include "cub3d.h"
 
-void	ft_doall(t_mlx *mlx, t_player *player)
+int	ft_doall(t_mlx *mlx, t_player *player)
 {
 	t_image			img;
 	t_image			textures[4];
 	t_raycasting	rc;
 	int				x;
 
+	if (ft_open_textures(textures, mlx))
+		return (printf("Error\nFailed to open texxtures files\n"), 1);
 	ft_init_image(&img, mlx);
-	ft_open_textures(textures, mlx);
 	x = 0;
 	while (x < WIDTH)
 	{
@@ -37,6 +38,7 @@ void	ft_doall(t_mlx *mlx, t_player *player)
 	mlx_destroy_image(mlx->mlx, textures[1].img);
 	mlx_destroy_image(mlx->mlx, textures[2].img);
 	mlx_destroy_image(mlx->mlx, textures[3].img);
+	return (0);
 }
 
 void	ft_init_player(t_player *player, t_data *data)
@@ -70,10 +72,15 @@ int	main(int argc, char **argv)
 	if (ft_init_mstruct(&data, argv[1]))
 		return (printf("Error\nBad allocation\n"), 1);
 	ft_init_player(&player, &data);
+	// printf("%s\n", data.info[0]);
+	// printf("%s\n", data.info[1]);
+	// printf("%s\n", data.info[2]);
+	// printf("%s\n", data.info[3]);
 	mlx.mlx = mlx_init();
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "cub3d");
 	mlx.player = &player;
-	ft_doall(&mlx, &player);
+	if (ft_doall(&mlx, &player))
+		exit (1);
 	mlx_hook(mlx.win, 2, 1L << 0, ft_key_hooks, &mlx);
 	mlx_hook(mlx.win, 3, 1L << 1, ft_release_hooks, &mlx);
 	mlx_loop(mlx.mlx);
