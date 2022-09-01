@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 14:36:51 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/31 16:03:12 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/09/01 16:51:41 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@
 
 # define M_SPEED		0.3
 # define ROT_SPEED		0.08
-# define M_SPRINT		0.9
 
 # define NORTH	0
 # define SOUTH	1

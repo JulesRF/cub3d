@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:26:39 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/08/31 16:55:45 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/09/01 16:46:48 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_get_wall_distance(t_raycasting *rc, t_player *player)
 			rc->mapy += rc->stepy;
 			rc->side = 1;
 		}
-		if (player->map[rc->mapy][rc->mapx] == '1')
+		if (player->map[rc->mapy][rc->mapx] != '0')
 			rc->hit = 1;
 	}
 	ft_wall_distance_utils(rc);

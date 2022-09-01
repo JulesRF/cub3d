@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/08/31 16:46:31 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/09/01 16:51:59 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ int	main(int argc, char **argv)
 	mlx.player = &player;
 	ft_doall(&mlx, &player);
 	mlx_hook(mlx.win, 2, 1L << 0, ft_key_hooks, &mlx);
-	mlx_hook(mlx.win, 3, 1L << 1, ft_release_hooks, &mlx);
 	mlx_loop(mlx.mlx);
 }
 //mlx_hook(mlx.win, 17, 0, ft_key_hooks, &mlx); broken de fou
