@@ -87,7 +87,7 @@ void		ft_cleanmap(char **map);
 void		ft_init_mlxwinimg(t_data *data);
 
 //Raycasting
-void		ft_doall(t_mlx *mlx, t_player *player);
+int		ft_doall(t_mlx *mlx, t_player *player);
 int			ft_key_hooks(int keycode, t_mlx *mlx);
 int			ft_release_hooks(int keycode, t_mlx *mlx);
 
