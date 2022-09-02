@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/09/01 16:58:17 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/09/02 20:31:34 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,7 @@ int	main(int argc, char **argv)
 	t_mlx		mlx;
 	t_player	player;
 	t_data		data;
-	int			i;
 
-	i = 0;
 	if (argc != 2)
 		return (printf("Error\nInvalid arguments number\n"), 1);
 	if (ft_checkmap(argv[1], &data))
