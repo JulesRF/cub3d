@@ -64,6 +64,32 @@ int	ft_getcolor(char *str)
 	return (res);
 }
 
+int	ft_playerdir(t_data *data)
+{
+	int	i;
+	int	j;
+	int	res;
+
+	i = 0;
+	res = -5;
+	while (data->map[i] != 0)
+	{
+		j = 0;
+		while (data->map[i][j])
+		{
+			if (data->map[i][j] == 'N' || data->map[i][j] == 'W'
+				|| data->map[i][j] == 'S' || data->map[i][j] == 'E')
+			{
+				res = ft_wichdir(data->map[i][j]);
+				data->map[i][j] = '0';
+			}
+			j++;
+		}
+		i++;
+	}
+	return (res);
+}
+
 int	ft_init_mstruct(t_data *data, char *arg)
 {
 	(void)arg;
@@ -76,11 +102,6 @@ int	ft_init_mstruct(t_data *data, char *arg)
 		return (1);
 	data->f_color = ft_getcolor(data->info[4]);
 	data->c_color = ft_getcolor(data->info[5]);
+	data->player_dir = ft_playerdir(data);
 	return (0);
-}
-
-void	ft_cleandata(t_data *data)
-{
-	ft_cleanmap(data->map);
-	ft_cleanmap(data->info);
 }

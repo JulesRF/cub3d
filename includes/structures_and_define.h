@@ -40,6 +40,7 @@ typedef struct s_data {
 	int			column_size;
 	int			player_x;
 	int			player_y;
+	int			player_dir;
 	int			c_color;
 	int			f_color;
 }	t_data;

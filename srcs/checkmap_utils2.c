@@ -14,7 +14,7 @@
 
 int	ft_isplyr(char c)
 {
-	if (c != 'N' && c != 'S' && c != 'O' && c != 'W')
+	if (c != 'N' && c != 'S' && c != 'E' && c != 'W')
 		return (0);
 	return (1);
 }
@@ -49,4 +49,23 @@ int	ft_longuest(char **map)
 	while (map[i] != 0)
 		i++;
 	return (i);
+}
+
+int	ft_wichdir(char c)
+{
+	if (c == 'N')
+		return (0);
+	if (c == 'S')
+		return (1);
+	if (c == 'W')
+		return (2);
+	if (c == 'E')
+		return (3);
+	return (-5);
+}
+
+void	ft_cleandata(t_data *data)
+{
+	ft_cleanmap(data->map);
+	ft_cleanmap(data->info);
 }

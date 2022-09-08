@@ -50,6 +50,8 @@ int			ft_digitonly(char *str);
 int			ft_isplyr(char c);
 int			ft_largest(char **map);
 int			ft_longuest(char **map);
+int			ft_wichdir(char c);
+void		ft_cleanmap(char **map);
 
 //	checkmap.c
 int			ft_test(char *str, char *set, int count, int i);
@@ -82,7 +84,6 @@ int			ft_specialstrlen(char *str);
 int			ft_atoi(char *str);
 int			ft_ischar(char *str, char c);
 int			ft_skipspace(char *str);
-void		ft_cleanmap(char **map);
 
 void		ft_init_mlxwinimg(t_data *data);
 
