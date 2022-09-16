@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/09/01 16:58:17 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/09/04 11:02:55 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_doall(t_mlx *mlx, t_player *player)
 	int				x;
 
 	if (ft_open_textures(textures, mlx))
-		return (printf("Error\nFailed to open texxtures files\n"), 1);
+		return (printf("Error\nFailed to open textures files\n"), 1);
 	ft_init_image(&img, mlx);
 	x = 0;
 	while (x < WIDTH)
@@ -62,9 +62,7 @@ int	main(int argc, char **argv)
 	t_mlx		mlx;
 	t_player	player;
 	t_data		data;
-	int			i;
 
-	i = 0;
 	if (argc != 2)
 		return (printf("Error\nInvalid arguments number\n"), 1);
 	if (ft_checkmap(argv[1], &data))
@@ -78,6 +76,6 @@ int	main(int argc, char **argv)
 	if (ft_doall(&mlx, &player))
 		exit (1);
 	mlx_hook(mlx.win, 2, 1L << 0, ft_key_hooks, &mlx);
+	mlx_hook(mlx.win, 17, 0, ft_key_hooks, &mlx);
 	mlx_loop(mlx.mlx);
 }
-//mlx_hook(mlx.win, 17, 0, ft_key_hooks, &mlx); broken de fou

@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:23:53 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/09/01 17:00:42 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/09/04 10:10:38 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,15 @@
 // 		return ("textures/ychibani.xpm");
 // }
 
-int	ft_open_textures2(t_image texture, t_image *textures, t_mlx *mlx, int i)
+int	ft_open_textures2(t_image texture, t_image *textures, t_mlx *mlx, int *i)
 {
 	if (texture.tw != texture.th || texture.img == NULL)
 	{
-		if (texture.img == NULL)
-			i--;
-		while (i >= 0)
+		*i = *i - 1;
+		while (*i >= 0)
 		{
-			mlx_destroy_image(mlx->mlx, textures[i].img);
-			i--;
+			mlx_destroy_image(mlx->mlx, textures[*i].img);
+			*i = *i - 1;
 		}
 		return (1);
 	}
@@ -58,7 +57,7 @@ int	ft_open_textures(t_image *textures, t_mlx *mlx)
 					&texture.bits_per_pixel, &texture.line_length,
 					&texture.endian);
 		}
-		if (ft_open_textures2(texture, textures, mlx, i))
+		if (ft_open_textures2(texture, textures, mlx, &i))
 			return (1);
 		textures[i] = texture;
 		i++;
