@@ -95,7 +95,7 @@ int	ft_init_mstruct(t_data *data, char *arg)
 	(void)arg;
 	data->line_size = ft_largest(data->map);
 	data->column_size = ft_longuest(data->map);
-	data->info = ft_cleaninf(data);
+	// data->info = ft_cleaninf(data);
 	if (!data->info)
 		return (1);
 	if (ft_getplyr(data))

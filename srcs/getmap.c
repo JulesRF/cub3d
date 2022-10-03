@@ -46,7 +46,7 @@ char	**ft_getinf(char *map_path, int i)
 
 	line = ft_infline(map_path);
 	if (!line)
-		return (printf("la il manque des infos askip\n"), NULL);
+		return (printf("Error\nInformations are missing."), NULL);
 	dest = ft_init(line);
 	if (!dest)
 		return (NULL);

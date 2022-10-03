@@ -23,6 +23,7 @@ SRCS_FILES	=	main.c					\
 				checkmap.c				\
 				cleaninf.c				\
 				alloc_map.c				\
+				check_inf2.c			\
 				init_mstruct.c			\
 				parsing_utils.c			\
 				get_next_line.c			\

@@ -1,6 +1,6 @@
-F 140,     160    ,       255
+F 140,     160, 20
 C 0 ,   0 ,   155
-NO textures/jroux-fo.xpm
+N       O textures/jroux-fo.xpm
 SO textures/ychibani.xpm
 WE textures/hspriet.xpm
 EA textures/wood.xpm

@@ -77,7 +77,7 @@ char	*ft_fill(char *dest, char *src, int size)
 	return (dest);
 }
 
-char	**ft_cleaninf(t_data *data)
+char	**ft_cleaninf(char **info)
 {
 	char	**dest;
 	int		i;
@@ -87,21 +87,21 @@ char	**ft_cleaninf(t_data *data)
 	dest = ft_init(6);
 	if (!dest)
 		return (NULL);
-	while (data->info[i] != 0)
+	while (info[i] != 0)
 	{
 		k = -5;
-		while (k == -5 && data->info[i] != 0)
+		while (k == -5 && info[i] != 0)
 		{
-			k = ft_wichline(data->info[i]);
+			k = ft_wichline(info[i]);
 			if (k == -5)
 				i++;
 		}
-		dest[k] = ft_fill(dest[k], data->info[i], 0);
+		dest[k] = ft_fill(dest[k], info[i], 0);
 		if (!dest[k])
 			return (NULL);
 		i++;
 	}
 	dest[6] = 0;
-	ft_cleanmap(data->info);
+	ft_cleanmap(info);
 	return (dest);
 }
