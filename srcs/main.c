@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/09/04 11:02:55 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/10/03 15:22:36 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	ft_doall(t_mlx *mlx, t_player *player)
 		ft_find_texture(&rc);
 		ft_print(&rc, mlx, textures, x);
 		x++;
-	}	
+	}
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img->img, 0, 0);
 	mlx_destroy_image(mlx->mlx, mlx->img->img);
 	mlx_destroy_image(mlx->mlx, textures[0].img);
@@ -39,6 +39,31 @@ int	ft_doall(t_mlx *mlx, t_player *player)
 	mlx_destroy_image(mlx->mlx, textures[2].img);
 	mlx_destroy_image(mlx->mlx, textures[3].img);
 	return (0);
+}
+
+void	ft_set_up_initial_direction(t_player *player, t_data *data)
+{
+	if (data->player_dir == NORTH)
+	{
+		player->dx = 0.05;
+		player->dy = -1;
+		player->planex = -0.70;
+		player->planey = 0;
+	}
+	else if (data->player_dir == EAST)
+	{
+		player->dx = 1;
+		player->dy = 0;
+		player->planex = -0.05;
+		player->planey = -0.70;
+	}
+	else if (data->player_dir == SOUTH)
+	{
+		player->dx = -0.05;
+		player->dy = 1;
+		player->planex = 0.70;
+		player->planey = 0;
+	}
 }
 
 void	ft_init_player(t_player *player, t_data *data)
@@ -49,6 +74,7 @@ void	ft_init_player(t_player *player, t_data *data)
 	player->dy = 0;
 	player->planex = 0;
 	player->planey = 0.70;
+	ft_set_up_initial_direction(player, data);
 	player->mspeed = M_SPEED;
 	player->rotspeed = ROT_SPEED;
 	player->w_map = data->line_size;

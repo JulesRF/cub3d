@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 14:36:51 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/09/01 17:01:12 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/10/03 14:44:10 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # define TILE_W			5
 # define TILE_H			5
 # define MAP_Y			10
-# define MAP_X			950//(WIDTH - (W_MAP * TILE_W)) - 10
+# define MAP_X			950
 # define PLAYER_SIZE	5
 # define OUTLINE		1
 

@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:26:39 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/09/01 16:46:48 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/10/03 15:14:28 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,16 @@ void	ft_find_texture(t_raycasting *rc)
 	if (rc->side == 1)
 	{
 		if (rc->ry < 0)
-			rc->tex_number = SOUTH;
-		else
 			rc->tex_number = NORTH;
+		else
+			rc->tex_number = SOUTH;
 	}
 	else
 	{
 		if (rc->rx < 0)
-			rc->tex_number = EAST;
-		else
 			rc->tex_number = WEST;
+		else
+			rc->tex_number = EAST;
 	}
 	if (rc->side == 0)
 		rc->wallx = rc->wally;
