@@ -6,7 +6,7 @@
 /*   By: ascotto- <ascotto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:23:53 by ascotto-          #+#    #+#             */
-/*   Updated: 2022/09/04 10:10:38 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/10/03 15:36:37 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,10 @@
 
 int	ft_open_textures2(t_image texture, t_image *textures, t_mlx *mlx, int *i)
 {
-	if (texture.tw != texture.th || texture.img == NULL)
+	if (texture.img == NULL || texture.tw != texture.th)
 	{
-		*i = *i - 1;
+		if (texture.img == NULL)
+			*i = *i - 1;
 		while (*i >= 0)
 		{
 			mlx_destroy_image(mlx->mlx, textures[*i].img);
@@ -57,9 +58,9 @@ int	ft_open_textures(t_image *textures, t_mlx *mlx)
 					&texture.bits_per_pixel, &texture.line_length,
 					&texture.endian);
 		}
+		textures[i] = texture;
 		if (ft_open_textures2(texture, textures, mlx, &i))
 			return (1);
-		textures[i] = texture;
 		i++;
 	}
 	return (0);

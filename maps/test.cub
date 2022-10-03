@@ -1,9 +1,9 @@
-F 140,     160    ,       255
-C 0 ,   0 ,   155
-NO textures/jroux-fo.xpm
-SO textures/ychibani.xpm
-WE textures/hspriet.xpm
-EA textures/wood.xpm
+F 140,     160    , 200
+C 0 ,   0 , 167
+EA textures/jroux-fo.xpm
+SO           textures/ychibani.xpm
+WE textures/hspriet.xpm                                     
+NO                                                                  textures/wood.xpm
 
 11111111111111
 10000000000001

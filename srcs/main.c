@@ -6,7 +6,7 @@
 /*   By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 14:04:52 by jroux-fo          #+#    #+#             */
-/*   Updated: 2022/10/03 15:22:36 by ascotto-         ###   ########.fr       */
+/*   Updated: 2022/10/03 15:29:30 by ascotto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int	main(int argc, char **argv)
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "cub3d");
 	mlx.player = &player;
 	if (ft_doall(&mlx, &player))
-		exit (1);
+		return (ft_exit_clean2(&mlx));
 	mlx_hook(mlx.win, 2, 1L << 0, ft_key_hooks, &mlx);
 	mlx_hook(mlx.win, 17, 0, ft_exit_clean2, &mlx);
 	mlx_loop(mlx.mlx);
