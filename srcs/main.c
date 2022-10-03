@@ -12,6 +12,22 @@
 
 #include "cub3d.h"
 
+int	ft_exit_clean2(t_mlx *mlx)
+{
+	(void)mlx;
+	if (mlx->mlx && mlx->win)
+		mlx_destroy_window(mlx->mlx, mlx->win);
+	ft_cleanmap(mlx->player->data->info);
+	ft_cleanmap(mlx->player->data->map);
+	if (mlx->mlx)
+	{
+		mlx_destroy_display(mlx->mlx);
+		free(mlx->mlx);
+	}
+	exit(EXIT_SUCCESS);
+	return (0);
+}
+
 int	ft_doall(t_mlx *mlx, t_player *player)
 {
 	t_image			img;
@@ -76,6 +92,6 @@ int	main(int argc, char **argv)
 	if (ft_doall(&mlx, &player))
 		exit (1);
 	mlx_hook(mlx.win, 2, 1L << 0, ft_key_hooks, &mlx);
-	mlx_hook(mlx.win, 17, 0, ft_key_hooks, &mlx);
+	mlx_hook(mlx.win, 17, 0, ft_exit_clean2, &mlx);
 	mlx_loop(mlx.mlx);
 }

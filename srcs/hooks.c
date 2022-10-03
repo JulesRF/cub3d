@@ -16,6 +16,8 @@ static int	ft_exit_clean(t_mlx *mlx)
 {
 	if (mlx->mlx && mlx->win)
 		mlx_destroy_window(mlx->mlx, mlx->win);
+	ft_cleanmap(mlx->player->data->info);
+	ft_cleanmap(mlx->player->data->map);
 	if (mlx->mlx)
 	{
 		mlx_destroy_display(mlx->mlx);
