@@ -6,7 +6,7 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/10/03 17:32:09 by ascotto-         ###   ########.fr        #
+#    Updated: 2022/10/04 15:04:40 by ascotto-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ SRCS_FILES	=	main.c					\
 				checkmap_utils2.c		\
 				get_next_line_utils.c					
 
-OBJ_DIR		=	obj
+OBJ_DIR		=	.obj
 OBJS		=	${addprefix ${OBJ_DIR}/,${SRCS_FILES:.c=.o}}
 
 
