@@ -100,7 +100,7 @@ int	ft_checkmap(char *map_path, t_data *data)
 		return (1);
 	inf = ft_getinf(map_path, 0);
 	if (!inf || ft_checkinf(inf, 0))
-		return (printf("Error\nWrong info format\n"), ft_cleanmap(full), 1);
+		return (ft_cleanmap(full), 1);
 	map = ft_getmap(full, inf, 0);
 	if (!map)
 		return (ft_cleanmap(inf), ft_cleanmap(full), 1);
@@ -109,7 +109,9 @@ int	ft_checkmap(char *map_path, t_data *data)
 		return (ft_cleanmap(inf), ft_cleanmap(map), 1);
 	data->map = map;
 	data->info = ft_cleaninf(inf);
+	for(int i = 0; data->info[i]; i++)
+		printf("%s\n", data->info[i]);
 	if (ft_checkinf2(data->info))
-		return (printf("Error\n"));
+		return (1);
 	return (0);
 }

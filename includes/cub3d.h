@@ -79,6 +79,7 @@ char		**ft_getmap(char **full_file, char **inf, int i);
 //	init_mstruct.c
 int			ft_getplyr(t_data *data);
 int			ft_getcolor(char *str);
+int			ft_getgoodindex(char *str, int j);
 int			ft_init_mstruct(t_data *data, char *arg);
 void		ft_cleandata(t_data *data);
 
