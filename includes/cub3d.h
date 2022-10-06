@@ -55,6 +55,7 @@ void		ft_cleanmap(char **map);
 
 //	check_inf2.c
 int			ft_checkinf2(char **info);
+int			ft_checkdbl(char *map_path);
 
 //	checkmap.c
 int			ft_test(char *str, char *set, int count, int i);

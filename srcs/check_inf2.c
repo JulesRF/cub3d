@@ -12,10 +12,10 @@
 
 #include "cub3d.h"
 
-int ft_checkcolor(char *line)
+int	ft_checkcolor(char *line)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = ft_getgoodindex(line, 1);
 	j = ft_getgoodindex(line, i);
@@ -29,7 +29,7 @@ int	ft_checkinfline(char *str)
 {
 	int	i;
 	int	j;
-	int k;
+	int	k;
 
 	k = 0;
 	i = ft_getgoodindex(str, 1);
@@ -45,6 +45,50 @@ int	ft_checkinf2(char **info)
 {
 	if (ft_checkcolor(info[4]) || ft_checkcolor(info[5])
 		|| ft_checkinfline(info[4]) || ft_checkinfline(info[5]))
+		return (1);
+	return (0);
+}
+
+int	ft_is_info(char *str)
+{
+	int			index1;
+	int			index2;
+
+	index1 = ft_skipspace(str);
+	index2 = index1 + 1 + ft_skipspace(str + index1 + 1);
+	if (str[index1] == 'N' && str[index2] == 'O')
+		return (0);
+	else if (str[index1] == 'S' && str[index2] == 'O')
+		return (0);
+	else if (str[index1] == 'W' && str[index2] == 'E')
+		return (0);
+	else if (str[index1] == 'E' && str[index2] == 'A')
+		return (0);
+	else if (str[index1] == 'F')
+		return (0);
+	else if (str[index1] == 'C')
+		return (0);
+	return (1);
+}
+
+int	ft_checkdbl(char *map_path)
+{
+	int		fd;
+	char	*dest;
+	int		count;
+
+	count = 0;
+	fd = open(map_path, O_RDONLY);
+	while (count == 0 || dest != NULL)
+	{
+		dest = get_next_line(fd);
+		if (dest == NULL)
+			break ;
+		if (!ft_is_info(dest))
+			count++;
+		free (dest);
+	}
+	if (count > 6)
 		return (1);
 	return (0);
 }

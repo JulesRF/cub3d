@@ -6,11 +6,11 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/08/29 08:54:47 by ascotto-         ###   ########.fr        #
+#    Updated: 2022/10/06 17:32:49 by jroux-fo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = cub3d
+NAME = cub3D
 
 SRCS_FILES	=	main.c					\
 				hooks.c					\

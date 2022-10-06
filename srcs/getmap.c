@@ -22,19 +22,23 @@ int	ft_infline(char *map_path)
 	fd = open(map_path, O_RDONLY);
 	line = 0;
 	obj = 0;
-	while ((line == 0 || dest != NULL))// && obj != 6)
+	if (ft_checkdbl(map_path))
+		return (1);
+	while ((line == 0 || dest != NULL) && obj != 6)
 	{
 		dest = get_next_line(fd);
 		if (dest == NULL)
 			break ;
 		if (!ft_checkobj(dest, obj))
+		{
 			obj++;
+			if (obj > 6)
+				return (free(dest), close(fd), 0);
+		}
 		free (dest);
 		line++;
 	}
-	if (obj != 6)
-		return (close (fd), line);
-	return (close (fd), 6);
+	return (close (fd), line);
 }
 
 char	**ft_getinf(char *map_path, int i)
@@ -45,8 +49,8 @@ char	**ft_getinf(char *map_path, int i)
 	int		line;
 
 	line = ft_infline(map_path);
-	if (!line || line != 6)
-		return (printf("Error\ninfo are badly placed\n"), NULL);
+	if (!line)
+		return (printf("Error\ninfos are badly placed\n"), NULL);
 	dest = ft_init(line);
 	if (!dest)
 		return (printf("Error\nBad allocation\n"), NULL);
@@ -59,7 +63,7 @@ char	**ft_getinf(char *map_path, int i)
 		dest[i] = ft_strdup(temp);
 		free (temp);
 		if (!dest[i])
-			return (printf("Error\nsalut\n"), NULL);
+			return (printf("Error\nBad allocation\n"), NULL);
 		i++;
 	}
 	dest[i] = 0;
@@ -102,7 +106,7 @@ char	**ft_getmap(char **full_file, char **inf, int i)
 	dest = ft_init(line);
 	if (!dest)
 		return (printf("Error\nBad allocation\n"), NULL);
-	while (i < line)
+	while (i < line - skip)
 	{
 		dest[i] = ft_strdup(full_file[inf_line + i + skip]);
 		i++;
