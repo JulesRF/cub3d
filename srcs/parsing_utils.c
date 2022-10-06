@@ -91,6 +91,8 @@ void	ft_cleanmap(char **map)
 	int	i;
 
 	i = 0;
+	if (!map)
+		return ;
 	while (map[i] != 0)
 	{
 		free(map[i]);

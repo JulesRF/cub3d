@@ -84,8 +84,8 @@ void	ft_set_up_initial_direction(t_player *player, t_data *data)
 
 void	ft_init_player(t_player *player, t_data *data)
 {
-	player->x = data->player_x;
-	player->y = data->player_y;
+	player->x = data->player_x + 0.5;
+	player->y = data->player_y + 0.5;
 	player->dx = -1;
 	player->dy = 0;
 	player->planex = 0;

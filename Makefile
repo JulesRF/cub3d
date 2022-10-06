@@ -6,7 +6,7 @@
 #    By: jroux-fo <jroux-fo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/11 14:02:45 by ascotto-          #+#    #+#              #
-#    Updated: 2022/10/04 15:04:40 by ascotto-         ###   ########.fr        #
+#    Updated: 2022/10/06 17:36:02 by ascotto-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,6 @@ MLX			=	mlx_linux/libmlx_Linux.a
 MLX_FLAGS	=	-Lmlx_linux -lmlx_Linux -L/usr/lib \
 				-Imlx_linux -lXext -lX11 -lm -lz
 
-
-
 SRCS_FILES	=	main.c					\
 				hooks.c					\
 				draw.c				 	\
@@ -37,6 +35,7 @@ SRCS_FILES	=	main.c					\
 				checkmap.c				\
 				cleaninf.c				\
 				alloc_map.c				\
+				check_inf2.c			\
 				init_mstruct.c			\
 				parsing_utils.c			\
 				get_next_line.c			\

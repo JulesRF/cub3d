@@ -53,6 +53,10 @@ int			ft_longuest(char **map);
 int			ft_wichdir(char c);
 void		ft_cleanmap(char **map);
 
+//	check_inf2.c
+int			ft_checkinf2(char **info);
+int			ft_checkdbl(char *map_path);
+
 //	checkmap.c
 int			ft_test(char *str, char *set, int count, int i);
 int			ft_checkname(char *str, char *set);
@@ -64,7 +68,7 @@ int			ft_checkmap(char *map_path, t_data *data);
 int			ft_wichline(char *str);
 int			ft_strsize(char *str);
 char		*ft_fill(char *dest, char *src, int size);
-char		**ft_cleaninf(t_data *data);
+char		**ft_cleaninf(char **info);
 
 //	getmap.c
 int			ft_infline(char *map_path);
@@ -76,6 +80,7 @@ char		**ft_getmap(char **full_file, char **inf, int i);
 //	init_mstruct.c
 int			ft_getplyr(t_data *data);
 int			ft_getcolor(char *str);
+int			ft_getgoodindex(char *str, int j);
 int			ft_init_mstruct(t_data *data, char *arg);
 void		ft_cleandata(t_data *data);
 

@@ -89,25 +89,28 @@ int	ft_checkinf(char **inf, int i)
 
 int	ft_checkmap(char *map_path, t_data *data)
 {
-	char	**full_file;
+	char	**full;
 	char	**map;
 	char	**inf;
 
 	if (ft_checkname(map_path, ".cub"))
 		return (1);
-	full_file = ft_alloc_map(map_path, 0, 0, -5);
-	if (!full_file)
+	full = ft_alloc_map(map_path, 0, 0, -5);
+	if (!full)
 		return (1);
 	inf = ft_getinf(map_path, 0);
-	if (!inf)
-		return (ft_cleanmap(full_file), 1);
-	map = ft_getmap(full_file, inf, 0);
+	if (!inf || ft_checkinf(inf, 0))
+		return (ft_cleanmap(full), ft_cleanmap(inf),
+			printf("Error\nWrong info format\n"), 1);
+	map = ft_getmap(full, inf, 0);
 	if (!map)
-		return (ft_cleanmap(inf), ft_cleanmap(full_file), 1);
-	ft_cleanmap(full_file);
+		return (ft_cleanmap(inf), ft_cleanmap(full), 1);
+	ft_cleanmap(full);
 	if (ft_checkclosed(map, 0, 0) || ft_checkinf(inf, 0))
 		return (ft_cleanmap(inf), ft_cleanmap(map), 1);
 	data->map = map;
-	data->info = inf;
+	data->info = ft_cleaninf(inf);
+	if (ft_checkinf2(data->info))
+		return (ft_cleandata(data), 1);
 	return (0);
 }
