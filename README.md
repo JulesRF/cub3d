@@ -21,4 +21,8 @@ He can also choose the color of the floor, ceiling, and can add textures to rend
 Here are some of the parsing checks that protects the program from crashing:
 ![image](https://github.com/JulesRF/cub3d/assets/51792641/59e57160-6e68-4e9d-b915-1d97f1e84050)
 ![image](https://github.com/JulesRF/cub3d/assets/51792641/fdae028a-bc90-46dc-94e6-57f5ecc7762b)
-![image](https://github.com/JulesRF/cub3d/assets/51792641/740a6dbf-c748-4953-98f7-399b45307e19)
+![image](https://github.com/JulesRF/cub3d/assets/51792641/740a6dbf-c748-4953-98f7-399b45307e19)  
+
+The map cand be rendered with any texture as long as it is a .xpm file, here is a map photos of me and my friend as walls
+![image](https://github.com/JulesRF/cub3d/assets/51792641/ee2f8291-0d62-4fad-8fd1-1f1045b7a6b0)
+
