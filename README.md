@@ -1,4 +1,4 @@
-###### cub3d
+### cub3d
 
 cub3d is a project from 42 school that uses raycasting to display a 3d rendered map.
 
