@@ -8,6 +8,8 @@ The player should be abble to walk through the map and to turn his head to navig
 https://github.com/JulesRF/cub3d/assets/51792641/910db615-9a77-4dde-8911-64e410b41e4a
 
 
+
+
 The subject also asks you to render differents maps located in ".cub" extension files.
 Those files can be created or modified by the user so the programm need to carefuly parse the input.
 
